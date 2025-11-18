@@ -18,6 +18,30 @@ header {
     padding-bottom: 0.5rem;
 }
 
+/* Layout en columnas para sección 8 */
+@media (min-width: 992px) {
+    .section-8-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        align-items: start;
+    }
+    
+    .section-8-grid h3 {
+        grid-column: 1 / -1;
+        margin-top: 1.5rem;
+        border-bottom: 2px solid #0d6efd;
+        padding-bottom: 0.5rem;
+    }
+    
+    .subsection-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        grid-column: 1 / -1;
+    }
+}
+
 /* Estilos para secciones del formulario */
 .form-section {
     margin-bottom: 0.8rem;

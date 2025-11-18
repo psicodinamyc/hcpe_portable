@@ -244,6 +244,25 @@ function leer(idCampo) {
 }
 
 // =====================================================
+// CÁLCULO DE EDAD
+// =====================================================
+function calcularEdad(fechaNac) {
+    if (!fechaNac) return;
+    
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNac);
+    
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+    
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+    }
+    
+    document.getElementById('edad').value = edad;
+}
+
+// =====================================================
 // EXPORTACIÓN A PDF
 // =====================================================
 function exportarAPDF() {
@@ -386,28 +405,70 @@ function exportarAWord() {
                        .replace(/\n/g, '<br>');
         }
         
-        // Función para agregar campo si tiene valor
-        function agregarCampo(label, valor, esTextarea = false) {
-            if (!valor) return '';
-            if (esTextarea) {
-                return `<div class="text-block"><span class="label">${label}:</span> <span class="value">${escaparHTML(valor)}</span></div>`;
+        // Función auxiliar para combinar valores de select y observación
+        function combinarValorSelectObservacion(selectValor, observacionValor) {
+            const select = selectValor || '';
+            const obs = observacionValor || '';
+            if (select && obs) {
+                return select + ' - ' + obs;
+            } else if (select) {
+                return select;
+            } else if (obs) {
+                return obs;
             }
-            return `<span class="field-inline"><span class="label">${label}:</span> <span class="value">${escaparHTML(valor)}</span></span>`;
+            return '';
         }
         
-        // Función para crear grid de datos personales
+        // Función auxiliar para obtener valor seguro
+        function valorSeguro(valor) {
+            return valor || '';
+        }
+        
+        // Función para crear tabla de campos
         function crearGridDatos(campos) {
-            if (campos.length === 0) return '';
-            let html = '<div class="datos-grid">';
-            for (let i = 0; i < campos.length; i += 4) {
-                html += '<div class="datos-row">';
-                for (let j = 0; j < 4 && (i + j) < campos.length; j++) {
-                    html += `<div class="datos-cell">${campos[i + j]}</div>`;
+            let html = '<table class="datos-table"><tbody><tr>';
+            campos.forEach((campo, index) => {
+                html += `<td class="dato-cell">${campo}</td>`;
+                if ((index + 1) % 3 === 0 && index < campos.length - 1) {
+                    html += '</tr><tr>';
                 }
-                html += '</div>';
+            });
+            // Fill remaining cells if needed
+            const remainingCells = campos.length % 3;
+            if (remainingCells > 0) {
+                for (let i = remainingCells; i < 3; i++) {
+                    html += '<td class="dato-cell"></td>';
+                }
             }
-            html += '</div>';
+            html += '</tr></tbody></table>';
             return html;
+        }
+        
+        function crearTablaCampos(campos) {
+            let html = '<table class="campos-table"><tbody>';
+            campos.forEach(campo => {
+                if (campo.valor && campo.valor.trim()) {
+                    html += '<tr>';
+                    html += `<td class="campo-label">${campo.label}:</td>`;
+                    html += `<td class="campo-valor">${campo.esTextarea ? `<div class="text-block">${escaparHTML(campo.valor || '')}</div>` : escaparHTML(campo.valor || '')}</td>`;
+                    html += '</tr>';
+                }
+            });
+            html += '</tbody></table>';
+            return html;
+        }
+
+        // Helper to create a field HTML snippet for Word export
+        function agregarCampo(label, valor, esTextarea = false) {
+            if (valor === null || valor === undefined || (typeof valor === 'string' && valor.trim() === '')) return '';
+            const safeValor = escaparHTML(valor);
+            if (esTextarea) {
+                return `<div class="field"><div class="text-block"><span class="label">${label ? label + ':' : ''}</span><div class="value">${safeValor}</div></div></div>`;
+            }
+            if (label) {
+                return `<div class="field-inline"><span class="label">${label}:</span> <span class="value">${safeValor}</span></div>`;
+            }
+            return `<div class="field-inline"><span class="value">${safeValor}</span></div>`;
         }
         
         // Recolectar todos los datos del formulario
@@ -486,10 +547,14 @@ function exportarAWord() {
             eventosEstresantes: obtenerValor('eventosEstresantes'),
             
             // Sección 8: Exploración Psicopatológica
+            higiene: obtenerSelectText('#higiene'),
             observacionHigiene: obtenerValor('observacionHigiene'),
             actitud: obtenerSelectText('#actitud'),
-            observacionexpresion: obtenerValor('observacionexpresion'),
+            observacionActitud: obtenerValor('observacionActitud'),
+            expresion: obtenerSelectText('#expresion'),
+            observacionExpresion: obtenerValor('observacionExpresion'),
             conducta: obtenerSelectText('#conducta'),
+            observacionConducta: obtenerValor('observacionConducta'),
             estadoAnimo: obtenerSelectText('#estadoAnimo'),
             observacionEstadoAnimo: obtenerValor('observacionEstadoAnimo'),
             afecto: obtenerSelectText('#afecto'),
@@ -540,7 +605,7 @@ function exportarAWord() {
             observacionActividadMotora: obtenerValor('observacionActividadMotora'),
             postura: obtenerRadio('postura'),
             observacionPostura: obtenerValor('observacionPostura'),
-            movimientosInvoluntarios: obtenerCheckboxes('movimientos_involuntarios'),
+            movimientosInvoluntarios: obtenerSelectText('#movimientosInvoluntarios'),
             observacionMovimientos: obtenerValor('observacionMovimientos'),
             juicio: obtenerRadio('juicio'),
             observacionJuicio: obtenerValor('observacionJuicio'),
@@ -592,11 +657,16 @@ function exportarAWord() {
         .doctor-info { font-size: 7pt; margin-top: 1pt; line-height: 1; }
         .datos-grid { display: table; width: 100%; margin: 2pt 0; }
         .datos-row { display: table-row; }
-        .datos-cell { display: table-cell; width: 25%; padding: 1pt 3pt; vertical-align: top; }
+        .datos-cell { display: table-cell; width: 20%; padding: 0.5pt 1pt; vertical-align: top; font-size: 7pt; }
+        .datos-table { width: 100%; border-collapse: collapse; margin: 2pt 0; font-size: 7pt; }
+        .dato-cell { padding: 1pt 3pt; border: none; vertical-align: top; width: 33.33%; }
+        .campos-table { width: 100%; border-collapse: collapse; margin: 2pt 0; font-size: 7pt; }
+        .campo-label { font-weight: bold; padding: 1pt 3pt; width: 30%; vertical-align: top; }
+        .campo-valor { padding: 1pt 3pt; vertical-align: top; }
         .field { margin: 1pt 0; }
-        .field-inline { display: inline-block; margin-right: 8pt; }
-        .label { font-weight: bold; font-size: 7.5pt; }
-        .value { font-size: 7.5pt; margin-left: 2pt; }
+        .field-inline { display: inline-block; margin-right: 4pt; }
+        .label { font-weight: bold; font-size: 7pt; }
+        .value { font-size: 7pt; margin-left: 2pt; }
         .text-block { margin: 2pt 0; padding: 2pt; background-color: #f9f9f9; }
         .text-block .label { display: block; font-weight: bold; margin-bottom: 1pt; }
         .text-block .value { display: block; }
@@ -714,47 +784,109 @@ function exportarAWord() {
         
         // Sección 8: EXPLORACIÓN PSICOPATOLÓGICA
         htmlContent += '<h2>8. EXPLORACIÓN PSICOPATOLÓGICA</h2>';
-        if (datos.observacionHigiene || datos.actitud || datos.observacionexpresion || datos.observacionAfecto) {
+        
+        // Apariencia y conducta
+        if (datos.higiene || datos.observacionHigiene || datos.actitud || datos.observacionActitud || datos.expresion || datos.observacionExpresion || datos.conducta || datos.observacionConducta || datos.estadoAnimo || datos.observacionEstadoAnimo || datos.afecto || datos.observacionAfecto) {
             htmlContent += '<h3>Apariencia y conducta</h3>';
-            htmlContent += agregarCampo('Higiene', datos.observacionHigiene, true);
-            htmlContent += agregarCampo('Actitud', datos.actitud);
-            htmlContent += agregarCampo('Expresión', datos.observacionexpresion, true);
-            htmlContent += agregarCampo('Afecto', datos.observacionAfecto, true);
+            const camposApariencia = [
+                {label: 'Higiene', valor: combinarValorSelectObservacion(datos.higiene, datos.observacionHigiene)},
+                {label: 'Actitud', valor: combinarValorSelectObservacion(datos.actitud, datos.observacionActitud)},
+                {label: 'Expresión facial', valor: combinarValorSelectObservacion(datos.expresion, datos.observacionExpresion)},
+                {label: 'Conducta', valor: combinarValorSelectObservacion(datos.conducta, datos.observacionConducta)},
+                {label: 'Estado de ánimo', valor: combinarValorSelectObservacion(datos.estadoAnimo, datos.observacionEstadoAnimo)},
+                {label: 'Afecto', valor: combinarValorSelectObservacion(datos.afecto, datos.observacionAfecto)}
+            ];
+            htmlContent += crearTablaCampos(camposApariencia);
         }
         
-        if (datos.observacionCursoPensamiento) {
+        // Pensamiento
+        if (datos.formaPensamiento || datos.observacionFormaPensamiento || datos.velocidadPensamiento || datos.observacionVelocidadPensamiento || datos.cursoPensamiento || datos.observacionCursoPensamiento || datos.contenidoPensamiento || datos.observacionContenidoPensamiento) {
             htmlContent += '<h3>Pensamiento</h3>';
-            htmlContent += agregarCampo('Curso', datos.observacionCursoPensamiento, true);
+            const camposPensamiento = [
+                {label: 'Forma', valor: combinarValorSelectObservacion(datos.formaPensamiento, datos.observacionFormaPensamiento)},
+                {label: 'Velocidad', valor: combinarValorSelectObservacion(datos.velocidadPensamiento, datos.observacionVelocidadPensamiento)},
+                {label: 'Curso', valor: combinarValorSelectObservacion(datos.cursoPensamiento, datos.observacionCursoPensamiento)},
+                {label: 'Contenido', valor: combinarValorSelectObservacion(datos.contenidoPensamiento, datos.observacionContenidoPensamiento)}
+            ];
+            htmlContent += crearTablaCampos(camposPensamiento);
         }
         
-        if (datos.observacionOrientacionTiempo || datos.observacionOrientacionEspacio || datos.observacionOrientacionPersonal) {
+        // Percepciones
+        if (datos.alucinaciones || datos.observacionAlucinaciones || datos.pseudoalucinaciones || datos.observacionPseudoalucinaciones || datos.ilusiones || datos.observacionIlusiones || datos.despersonalizacion || datos.observacionDespersonalizacion || datos.desrealizacion || datos.observacionDesrealizacion) {
+            htmlContent += '<h3>Percepciones</h3>';
+            const camposPercepciones = [
+                {label: 'Alucinaciones', valor: combinarValorSelectObservacion(datos.alucinaciones, datos.observacionAlucinaciones)},
+                {label: 'Pseudoalucinaciones', valor: combinarValorSelectObservacion(datos.pseudoalucinaciones, datos.observacionPseudoalucinaciones)},
+                {label: 'Ilusiones', valor: combinarValorSelectObservacion(datos.ilusiones, datos.observacionIlusiones)},
+                {label: 'Despersonalización', valor: combinarValorSelectObservacion(datos.despersonalizacion, datos.observacionDespersonalizacion)},
+                {label: 'Desrealización', valor: combinarValorSelectObservacion(datos.desrealizacion, datos.observacionDesrealizacion)}
+            ];
+            htmlContent += crearTablaCampos(camposPercepciones);
+        }
+        
+        // Orientación
+        if (datos.orientacionTiempo || datos.observacionOrientacionTiempo || datos.orientacionEspacio || datos.observacionOrientacionEspacio || datos.orientacionPersonal || datos.observacionOrientacionPersonal || datos.orientacionSocial || datos.observacionOrientacionSocial) {
             htmlContent += '<h3>Orientación</h3>';
-            htmlContent += agregarCampo('Tiempo', datos.observacionOrientacionTiempo, true);
-            htmlContent += agregarCampo('Espacio', datos.observacionOrientacionEspacio, true);
-            htmlContent += agregarCampo('Personal', datos.observacionOrientacionPersonal, true);
+            const camposOrientacion = [
+                {label: 'Tiempo', valor: combinarValorSelectObservacion(datos.orientacionTiempo, datos.observacionOrientacionTiempo)},
+                {label: 'Espacio', valor: combinarValorSelectObservacion(datos.orientacionEspacio, datos.observacionOrientacionEspacio)},
+                {label: 'Personal', valor: combinarValorSelectObservacion(datos.orientacionPersonal, datos.observacionOrientacionPersonal)},
+                {label: 'Social', valor: combinarValorSelectObservacion(datos.orientacionSocial, datos.observacionOrientacionSocial)}
+            ];
+            htmlContent += crearTablaCampos(camposOrientacion);
         }
         
-        if (datos.observacionAtencion || datos.observacionConcentracion) {
+        // Atención y concentración
+        if (datos.atencion || datos.observacionAtencion || datos.concentracion || datos.observacionConcentracion) {
             htmlContent += '<h3>Atención y concentración</h3>';
-            htmlContent += agregarCampo('Atención', datos.observacionAtencion, true);
-            htmlContent += agregarCampo('Concentración', datos.observacionConcentracion, true);
+            const camposAtencion = [
+                {label: 'Atención', valor: combinarValorSelectObservacion(datos.atencion, datos.observacionAtencion)},
+                {label: 'Concentración', valor: combinarValorSelectObservacion(datos.concentracion, datos.observacionConcentracion)}
+            ];
+            htmlContent += crearTablaCampos(camposAtencion);
         }
         
-        if (datos.observacionIniciativa || datos.observacionPerseverancia) {
+        // Memoria
+        if (datos.memoriaInmediata || datos.observacionMemoriaInmediata || datos.memoriaReciente || datos.observacionMemoriaReciente || datos.memoriaRemota || datos.observacionMemoriaRemota) {
+            htmlContent += '<h3>Memoria</h3>';
+            const camposMemoria = [
+                {label: 'Inmediata', valor: combinarValorSelectObservacion(datos.memoriaInmediata, datos.observacionMemoriaInmediata)},
+                {label: 'Reciente', valor: combinarValorSelectObservacion(datos.memoriaReciente, datos.observacionMemoriaReciente)},
+                {label: 'Remota', valor: combinarValorSelectObservacion(datos.memoriaRemota, datos.observacionMemoriaRemota)}
+            ];
+            htmlContent += crearTablaCampos(camposMemoria);
+        }
+        
+        // Voluntad
+        if (datos.iniciativa || datos.observacionIniciativa || datos.perseverancia || datos.observacionPerseverancia || datos.interes || datos.observacionInteres) {
             htmlContent += '<h3>Voluntad</h3>';
-            htmlContent += agregarCampo('Iniciativa', datos.observacionIniciativa, true);
-            htmlContent += agregarCampo('Perseverancia', datos.observacionPerseverancia, true);
+            const camposVoluntad = [
+                {label: 'Iniciativa', valor: combinarValorSelectObservacion(datos.iniciativa, datos.observacionIniciativa)},
+                {label: 'Perseverancia', valor: combinarValorSelectObservacion(datos.perseverancia, datos.observacionPerseverancia)},
+                {label: 'Interés', valor: combinarValorSelectObservacion(datos.interes, datos.observacionInteres)}
+            ];
+            htmlContent += crearTablaCampos(camposVoluntad);
         }
         
-        if (datos.observacionActividadMotora) {
+        // Psicomotricidad
+        if (datos.actividadMotora || datos.observacionActividadMotora || datos.postura || datos.observacionPostura || datos.movimientosInvoluntarios || datos.observacionMovimientos) {
             htmlContent += '<h3>Psicomotricidad</h3>';
-            htmlContent += agregarCampo('Actividad motora', datos.observacionActividadMotora, true);
+            const camposPsicomotricidad = [
+                {label: 'Actividad motora', valor: combinarValorSelectObservacion(datos.actividadMotora, datos.observacionActividadMotora)},
+                {label: 'Postura', valor: combinarValorSelectObservacion(datos.postura, datos.observacionPostura)},
+                {label: 'Movimientos involuntarios', valor: combinarValorSelectObservacion(datos.movimientosInvoluntarios, datos.observacionMovimientos)}
+            ];
+            htmlContent += crearTablaCampos(camposPsicomotricidad);
         }
         
-        if (datos.observacionJuicio || datos.observacionIntrospeccion) {
+        // Juicio e introspección
+        if (datos.juicio || datos.observacionJuicio || datos.tiposJuicio || datos.observacionTiposJuicio || datos.introspeccion || datos.observacionIntrospeccion) {
             htmlContent += '<h3>Juicio e introspección</h3>';
-            htmlContent += agregarCampo('Juicio', datos.observacionJuicio, true);
-            htmlContent += agregarCampo('Introspección', datos.observacionIntrospeccion, true);
+            const camposJuicio = [
+                {label: 'Juicio', valor: combinarValorSelectObservacion(datos.juicio, datos.observacionJuicio) + (datos.tiposJuicio ? ' (' + datos.tiposJuicio + ')' : '') + (datos.observacionTiposJuicio ? ' - ' + datos.observacionTiposJuicio : '')},
+                {label: 'Introspección', valor: combinarValorSelectObservacion(datos.introspeccion, datos.observacionIntrospeccion)}
+            ];
+            htmlContent += crearTablaCampos(camposJuicio);
         }
         
         // Sección 9: DIAGNÓSTICO MULTIAXIAL
@@ -801,15 +933,27 @@ function exportarAWord() {
             agregarCampo('Psicofarmacológico', datos.tiposTratamiento.includes('psicofarmacos') ? 'Sí' : 'No'),
             agregarCampo('Psicoterapia', datos.tiposTratamiento.includes('psicoterapia') ? 'Sí' : 'No'),
             agregarCampo('Otros tratamientos', datos.tiposTratamiento.includes('otrosTratamiento') ? 'Sí' : 'No'),
-            agregarCampo('Frecuencia', datos.frecuenciaSeguimiento),
-            agregarCampo('Fecha próxima consulta', datos.fechaProximaConsulta),
-            agregarCampo('Pronóstico', datos.pronostico),
-            agregarCampo('Reevaluación', datos.reevaluacion)
+            agregarCampo('Frecuencia de seguimiento', datos.frecuenciaSeguimiento, true)
         ].filter(Boolean).join('');
 
         if (seccion10Campos) {
             htmlContent += '<h2>10. PLAN DE TRATAMIENTO</h2>';
             htmlContent += seccion10Campos;
+        }
+        
+        // Sección 11: PRONÓSTICO Y PLAN DE SEGUIMIENTO
+        const seccion11Campos = [
+            agregarCampo('Pronóstico', datos.pronostico),
+            agregarCampo('Observación pronóstico', datos.pronosticoObservacion, true),
+            agregarCampo('Reevaluación', datos.reevaluacion),
+            agregarCampo('Observación reevaluación', datos.reevaluacionObservacion, true),
+            agregarCampo('Fecha próxima consulta', datos.fechaProximaConsulta),
+            agregarCampo('Observación próxima consulta', datos.proximaConsultaObservacion, true)
+        ].filter(Boolean).join('');
+
+        if (seccion11Campos) {
+            htmlContent += '<h2>11. PRONÓSTICO Y PLAN DE SEGUIMIENTO</h2>';
+            htmlContent += seccion11Campos;
         }
         
         // Firma y pie de página

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAM-A - Escala de Ansiedad de Hamilton</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0d6efd;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .instrucciones {
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-left: 4px solid #0d6efd;
+            margin-bottom: 25px;
+        }
+        .item {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-left: 3px solid #6c757d;
+            background-color: #f8f9fa;
+        }
+        .item h5 {
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .form-check {
+            margin-bottom: 10px;
+        }
+        .resultado {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .resultado.show {
+            display: block;
+        }
+        .resultado h3 {
+            margin-bottom: 15px;
+        }
+        .nivel-leve {
+            background-color: #d1e7dd;
+            border-left: 4px solid #198754;
+        }
+        .nivel-moderado {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        .nivel-grave {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-heartbeat"></i> HAM-A</h1>
+        <h4 class="text-center mb-4">Escala de Ansiedad de Hamilton</h4>
+        
+        <div class="instrucciones">
+            <h5><i class="fas fa-info-circle"></i> Instrucciones</h5>
+            <p>La Escala de Ansiedad de Hamilton (HAM-A) es un instrumento heteroaplicado que evalúa la intensidad de la ansiedad en pacientes con trastornos de ansiedad, neurosis y trastornos psicosomáticos.</p>
+            <p><strong>Para cada ítem, seleccione la intensidad que mejor describa el estado del paciente durante la última semana.</strong></p>
+        </div>
+
+        <form id="hamaForm">
+            <!-- Item 1 -->
+            <div class="item">
+                <h5>1. Estado ansioso</h5>
+                <p class="text-muted small">Preocupaciones, temor de que suceda lo peor, aprensión, irritabilidad</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item1" value="0" id="i1_0">
+                    <label class="form-check-label" for="i1_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item1" value="1" id="i1_1">
+                    <label class="form-check-label" for="i1_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item1" value="2" id="i1_2">
+                    <label class="form-check-label" for="i1_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item1" value="3" id="i1_3">
+                    <label class="form-check-label" for="i1_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item1" value="4" id="i1_4">
+                    <label class="form-check-label" for="i1_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="item">
+                <h5>2. Tensión</h5>
+                <p class="text-muted small">Sensación de tensión, fatiga, imposibilidad de relajarse, reacciones de sobresalto, llanto fácil, temblores, inquietud</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item2" value="0" id="i2_0">
+                    <label class="form-check-label" for="i2_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item2" value="1" id="i2_1">
+                    <label class="form-check-label" for="i2_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item2" value="2" id="i2_2">
+                    <label class="form-check-label" for="i2_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item2" value="3" id="i2_3">
+                    <label class="form-check-label" for="i2_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item2" value="4" id="i2_4">
+                    <label class="form-check-label" for="i2_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="item">
+                <h5>3. Temores</h5>
+                <p class="text-muted small">A la oscuridad, a los desconocidos, a quedarse solo, a los animales, al tráfico, a las multitudes</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item3" value="0" id="i3_0">
+                    <label class="form-check-label" for="i3_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item3" value="1" id="i3_1">
+                    <label class="form-check-label" for="i3_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item3" value="2" id="i3_2">
+                    <label class="form-check-label" for="i3_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item3" value="3" id="i3_3">
+                    <label class="form-check-label" for="i3_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item3" value="4" id="i3_4">
+                    <label class="form-check-label" for="i3_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="item">
+                <h5>4. Insomnio</h5>
+                <p class="text-muted small">Dificultad para conciliar el sueño, sueño interrumpido, sueño insatisfactorio, fatiga al despertar, pesadillas, terrores nocturnos</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item4" value="0" id="i4_0">
+                    <label class="form-check-label" for="i4_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item4" value="1" id="i4_1">
+                    <label class="form-check-label" for="i4_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item4" value="2" id="i4_2">
+                    <label class="form-check-label" for="i4_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item4" value="3" id="i4_3">
+                    <label class="form-check-label" for="i4_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item4" value="4" id="i4_4">
+                    <label class="form-check-label" for="i4_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="item">
+                <h5>5. Funciones intelectuales (cognitivas)</h5>
+                <p class="text-muted small">Dificultad de concentración, mala memoria</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item5" value="0" id="i5_0">
+                    <label class="form-check-label" for="i5_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item5" value="1" id="i5_1">
+                    <label class="form-check-label" for="i5_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item5" value="2" id="i5_2">
+                    <label class="form-check-label" for="i5_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item5" value="3" id="i5_3">
+                    <label class="form-check-label" for="i5_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item5" value="4" id="i5_4">
+                    <label class="form-check-label" for="i5_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="item">
+                <h5>6. Estado de ánimo deprimido</h5>
+                <p class="text-muted small">Pérdida de interés, falta de placer en pasatiempos, depresión, insomnio de madrugada, variaciones del estado de ánimo</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item6" value="0" id="i6_0">
+                    <label class="form-check-label" for="i6_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item6" value="1" id="i6_1">
+                    <label class="form-check-label" for="i6_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item6" value="2" id="i6_2">
+                    <label class="form-check-label" for="i6_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item6" value="3" id="i6_3">
+                    <label class="form-check-label" for="i6_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item6" value="4" id="i6_4">
+                    <label class="form-check-label" for="i6_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 7 -->
+            <div class="item">
+                <h5>7. Síntomas somáticos generales (musculares)</h5>
+                <p class="text-muted small">Dolores y molestias musculares, rigidez, contracciones musculares, sacudidas clónicas, rechinar de dientes, voz temblorosa</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item7" value="0" id="i7_0">
+                    <label class="form-check-label" for="i7_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item7" value="1" id="i7_1">
+                    <label class="form-check-label" for="i7_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item7" value="2" id="i7_2">
+                    <label class="form-check-label" for="i7_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item7" value="3" id="i7_3">
+                    <label class="form-check-label" for="i7_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item7" value="4" id="i7_4">
+                    <label class="form-check-label" for="i7_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 8 -->
+            <div class="item">
+                <h5>8. Síntomas somáticos generales (sensoriales)</h5>
+                <p class="text-muted small">Zumbidos de oídos, visión borrosa, oleadas de frío o calor, sensación de debilidad, sensación de hormigueo</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item8" value="0" id="i8_0">
+                    <label class="form-check-label" for="i8_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item8" value="1" id="i8_1">
+                    <label class="form-check-label" for="i8_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item8" value="2" id="i8_2">
+                    <label class="form-check-label" for="i8_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item8" value="3" id="i8_3">
+                    <label class="form-check-label" for="i8_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item8" value="4" id="i8_4">
+                    <label class="form-check-label" for="i8_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 9 -->
+            <div class="item">
+                <h5>9. Síntomas cardiovasculares</h5>
+                <p class="text-muted small">Taquicardia, palpitaciones, dolor torácico, sensación pulsátil en vasos, sensación de desmayo, extrasístoles</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item9" value="0" id="i9_0">
+                    <label class="form-check-label" for="i9_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item9" value="1" id="i9_1">
+                    <label class="form-check-label" for="i9_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item9" value="2" id="i9_2">
+                    <label class="form-check-label" for="i9_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item9" value="3" id="i9_3">
+                    <label class="form-check-label" for="i9_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item9" value="4" id="i9_4">
+                    <label class="form-check-label" for="i9_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 10 -->
+            <div class="item">
+                <h5>10. Síntomas respiratorios</h5>
+                <p class="text-muted small">Presión u opresión torácica, sensación de ahogo, suspiros, disnea</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item10" value="0" id="i10_0">
+                    <label class="form-check-label" for="i10_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item10" value="1" id="i10_1">
+                    <label class="form-check-label" for="i10_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item10" value="2" id="i10_2">
+                    <label class="form-check-label" for="i10_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item10" value="3" id="i10_3">
+                    <label class="form-check-label" for="i10_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item10" value="4" id="i10_4">
+                    <label class="form-check-label" for="i10_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 11 -->
+            <div class="item">
+                <h5>11. Síntomas gastrointestinales</h5>
+                <p class="text-muted small">Dificultades al tragar, gases, dispepsia, dolor antes/después de comer, ardor, sensación de estómago lleno, vómitos acuosos, náuseas, estreñimiento, pérdida de peso, diarrea</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item11" value="0" id="i11_0">
+                    <label class="form-check-label" for="i11_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item11" value="1" id="i11_1">
+                    <label class="form-check-label" for="i11_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item11" value="2" id="i11_2">
+                    <label class="form-check-label" for="i11_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item11" value="3" id="i11_3">
+                    <label class="form-check-label" for="i11_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item11" value="4" id="i11_4">
+                    <label class="form-check-label" for="i11_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 12 -->
+            <div class="item">
+                <h5>12. Síntomas genitourinarios</h5>
+                <p class="text-muted small">Micciones frecuentes, micción urgente, amenorrea, menorragia, frigidez, eyaculación precoz, pérdida de libido, impotencia</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item12" value="0" id="i12_0">
+                    <label class="form-check-label" for="i12_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item12" value="1" id="i12_1">
+                    <label class="form-check-label" for="i12_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item12" value="2" id="i12_2">
+                    <label class="form-check-label" for="i12_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item12" value="3" id="i12_3">
+                    <label class="form-check-label" for="i12_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item12" value="4" id="i12_4">
+                    <label class="form-check-label" for="i12_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 13 -->
+            <div class="item">
+                <h5>13. Síntomas del sistema nervioso autónomo</h5>
+                <p class="text-muted small">Boca seca, enrojecimiento, palidez, tendencia a sudar, vértigos, cefalea de tensión, piloerección</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item13" value="0" id="i13_0">
+                    <label class="form-check-label" for="i13_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item13" value="1" id="i13_1">
+                    <label class="form-check-label" for="i13_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item13" value="2" id="i13_2">
+                    <label class="form-check-label" for="i13_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item13" value="3" id="i13_3">
+                    <label class="form-check-label" for="i13_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item13" value="4" id="i13_4">
+                    <label class="form-check-label" for="i13_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <!-- Item 14 -->
+            <div class="item">
+                <h5>14. Comportamiento durante la entrevista</h5>
+                <p class="text-muted small">Inquieto, nervioso, tenso, suspiros, palidez, tragar saliva, eructos, tics, sobresaltos, temblor de manos, ceño fruncido, rostro tenso, aumento del tono muscular, respiración entrecortada, palidez facial</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item14" value="0" id="i14_0">
+                    <label class="form-check-label" for="i14_0">0 = Ausente</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item14" value="1" id="i14_1">
+                    <label class="form-check-label" for="i14_1">1 = Leve</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item14" value="2" id="i14_2">
+                    <label class="form-check-label" for="i14_2">2 = Moderado</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item14" value="3" id="i14_3">
+                    <label class="form-check-label" for="i14_3">3 = Grave</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="item14" value="4" id="i14_4">
+                    <label class="form-check-label" for="i14_4">4 = Muy grave/incapacitante</label>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="button" class="btn btn-primary btn-lg" onclick="calcularHAMA()">
+                    <i class="fas fa-calculator"></i> Calcular Puntuación
+                </button>
+                <button type="button" class="btn btn-secondary btn-lg no-print" onclick="limpiarFormulario()">
+                    <i class="fas fa-redo"></i> Limpiar
+                </button>
+                <button type="button" class="btn btn-success btn-lg no-print" onclick="window.print()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+            </div>
+        </form>
+
+        <div id="resultado" class="resultado">
+            <h3><i class="fas fa-chart-bar"></i> Resultado</h3>
+            <p><strong>Puntuación Total:</strong> <span id="puntuacionTotal">0</span> puntos</p>
+            <div id="interpretacion"></div>
+        </div>
+    </div>
+
+    <script>
+        function calcularHAMA() {
+            let total = 0;
+            let completado = true;
+
+            for (let i = 1; i <= 14; i++) {
+                const item = document.querySelector(`input[name="item${i}"]:checked`);
+                if (item) {
+                    total += parseInt(item.value);
+                } else {
+                    completado = false;
+                }
+            }
+
+            if (!completado) {
+                alert('⚠️ Por favor, responda todos los ítems antes de calcular.');
+                return;
+            }
+
+            document.getElementById('puntuacionTotal').textContent = total;
+            const resultadoDiv = document.getElementById('resultado');
+            const interpretacionDiv = document.getElementById('interpretacion');
+
+            let clase, nivel, interpretacion;
+
+            if (total < 18) {
+                clase = 'nivel-leve';
+                nivel = 'Ansiedad Leve';
+                interpretacion = 'La puntuación indica un nivel leve de ansiedad.';
+            } else if (total >= 18 && total <= 24) {
+                clase = 'nivel-moderado';
+                nivel = 'Ansiedad Moderada';
+                interpretacion = 'La puntuación indica un nivel moderado de ansiedad que puede requerir intervención.';
+            } else {
+                clase = 'nivel-grave';
+                nivel = 'Ansiedad Grave';
+                interpretacion = 'La puntuación indica un nivel grave de ansiedad. Se recomienda evaluación y tratamiento especializado.';
+            }
+
+            resultadoDiv.className = `resultado ${clase} show`;
+            interpretacionDiv.innerHTML = `<p><strong>Interpretación:</strong> ${nivel}</p><p>${interpretacion}</p>`;
+
+            resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function limpiarFormulario() {
+            if (confirm('¿Está seguro de que desea limpiar el formulario?')) {
+                document.getElementById('hamaForm').reset();
+                document.getElementById('resultado').classList.remove('show');
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

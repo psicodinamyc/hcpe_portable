@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAM-D - Escala de Depresión de Hamilton</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- HCPE Styles -->
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Estilos específicos para HAM-D */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            margin-top: 0.3rem;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.3rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            line-height: 1.2;
+        }
+
+        .radio-group input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            margin-top: 0.1rem;
+            flex-shrink: 0;
+            accent-color: #0d6efd;
+            border: 2px solid #0d6efd;
+            border-radius: 50%;
+            appearance: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .radio-group input[type="radio"]:checked {
+            background-color: #0d6efd;
+        }
+
+        .radio-group input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 5px;
+            height: 5px;
+            background-color: white;
+            border-radius: 50%;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: #0d6efd;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .item {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background-color: #f8f9fa;
+            border-radius: 0.3rem;
+            border-left: 3px solid #0d6efd;
+        }
+
+        #calculateBtn {
+            background: linear-gradient(135deg, #0d6efd, #0056b3);
+            border: none;
+            padding: 0.6rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 0.3rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #calculateBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        #result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 0.5rem;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        #result h3 {
+            color: #0d6efd;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        #totalScore {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0d6efd;
+        }
+
+        .interpretation {
+            margin-top: 0.8rem;
+            padding: 0.8rem;
+            background-color: rgba(13, 110, 253, 0.1);
+            border-radius: 0.3rem;
+            font-weight: 600;
+            text-align: center;
+            color: #0d6efd;
+        }
+
+        .reference {
+            font-style: italic;
+            color: #6c757d;
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+        }
+
+        .signature-image {
+            max-width: 250px;
+            height: auto;
+            margin: 0.8rem auto;
+            display: block;
+        }
+
+        /* Layout de 2 columnas para la escala de Hamilton */
+        .hamilton-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hamilton-columna {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Responsive: una columna en móviles */
+        @media (max-width: 768px) {
+            .hamilton-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        /* Layout de columnas para datos generales */
+        .datos-generales-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .datos-columna {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Responsive: 2 columnas en tablets, 1 en móviles */
+        @media (max-width: 992px) {
+            .datos-generales-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .datos-generales-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: #0d6efd;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+
+        .form-control::placeholder {
+            color: #6c757d;
+            opacity: 0.7;
+        }
+
+        /* Configuración específica de impresión para HAM-D */
+        @media print {
+            @page {
+                size: A4;
+                margin: 12mm;
+            }
+
+            html, body {
+                font-family: "Times New Roman", serif !important;
+                font-size: 9pt !important;
+                line-height: 1.2 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: black !important;
+                font-weight: normal !important;
+            }
+
+            /* Ocultar elementos no deseados en impresión */
+            .no-print, .btn, .btn-print, .btn-save, .btn-next, .footer {
+                display: none !important;
+            }
+
+            /* Mostrar el resultado en impresión */
+            #result {
+                display: block !important;
+            }
+
+            /* Configurar header para impresión */
+            header {
+                padding: 3mm 0 !important;
+                margin-bottom: 0 !important;
+                background: white !important;
+                border-bottom: 1px solid #000 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+
+            header h1 {
+                font-size: 14pt !important;
+                margin-bottom: 3mm !important;
+                color: black !important;
+                text-shadow: none !important;
+            }
+
+            .doctor-info {
+                font-size: 8pt !important;
+            }
+
+            .doctor-info p {
+                margin-bottom: 1mm !important;
+            }
+
+            /* Configurar sección principal */
+            main {
+                margin: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            .container {
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .form-section {
+                padding: 0 !important;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            .form-section h1 {
+                font-size: 10pt !important;
+                margin-bottom: 3mm !important;
+                text-align: center !important;
+                border-bottom: 1px solid #000 !important;
+                padding-bottom: 1mm !important;
+                page-break-after: avoid;
+            }
+
+            .form-section > p {
+                font-size: 7pt !important;
+                margin-bottom: 3mm !important;
+                text-align: center !important;
+                page-break-after: avoid;
+            }
+
+            /* Configurar ítems para impresión */
+            .item {
+                margin-bottom: 2mm !important;
+                padding: 1mm !important;
+                background: transparent !important;
+                border: none !important;
+                border-left: none !important;
+                border-radius: 0 !important;
+                page-break-inside: avoid !important;
+                box-shadow: none !important;
+            }
+
+            .item-title {
+                font-size: 6pt !important;
+                font-weight: bold !important;
+                color: black !important;
+                margin-bottom: 1mm !important;
+                line-height: 1.1 !important;
+            }
+
+            .radio-group {
+                margin-top: 0.3mm !important;
+                gap: 0.5mm !important;
+            }
+
+            .radio-group label {
+                font-size: 5pt !important;
+                line-height: 1.1 !important;
+                margin-bottom: 0.5mm !important;
+                display: flex !important;
+                align-items: flex-start !important;
+                gap: 1mm !important;
+                page-break-inside: avoid !important;
+            }
+
+            .radio-group input[type="radio"] {
+                margin-top: 0.3mm !important;
+                flex-shrink: 0 !important;
+                transform: scale(0.7) !important;
+            }
+
+            .radio-group span {
+                flex: 1 !important;
+            }
+
+            /* DISTRIBUCIÓN EN 2 PÁGINAS A4 */
+
+            /* PÁGINA 1: Header + Sección 1 completa */
+            #seccion-1 {
+                page-break-after: always !important;
+            }
+
+            /* PÁGINA 2: Sección 2 completa + Resultados + Firma */
+            #seccion-2 {
+                page-break-before: always !important;
+                margin-top: 0 !important;
+            }
+
+            /* Configurar sección de resultados */
+            #result {
+                margin-top: 5mm !important;
+                padding: 3mm !important;
+                background: transparent !important;
+                border: 1px solid #000 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                page-break-inside: avoid !important;
+            }
+
+            #result h3 {
+                font-size: 10pt !important;
+                margin-bottom: 3mm !important;
+                color: black !important;
+                text-align: center !important;
+            }
+
+            #result p {
+                font-size: 9pt !important;
+                margin-bottom: 2mm !important;
+                text-align: center !important;
+            }
+
+            #totalScore {
+                font-size: 14pt !important;
+                font-weight: bold !important;
+                color: black !important;
+            }
+
+            .interpretation {
+                font-size: 9pt !important;
+                margin-top: 3mm !important;
+                padding: 2mm !important;
+                background: transparent !important;
+                border: 1px solid #ccc !important;
+                border-radius: 0 !important;
+                font-weight: bold !important;
+                text-align: center !important;
+                color: black !important;
+            }
+
+            /* Configurar referencia */
+            .reference {
+                font-size: 7pt !important;
+                margin-top: 5mm !important;
+                text-align: center !important;
+                font-style: italic !important;
+                color: #666 !important;
+                page-break-inside: avoid !important;
+            }
+
+            /* Configurar sección de firma */
+            .signature-section {
+                margin-top: 8mm !important;
+                page-break-inside: avoid !important;
+                text-align: center !important;
+            }
+
+            .signature-image {
+                max-width: 80mm !important;
+                height: auto !important;
+                margin: 3mm auto !important;
+                display: block !important;
+            }
+
+            .signature-section p {
+                font-size: 8pt !important;
+                margin: 1mm 0 !important;
+            }
+
+            .signature-line {
+                border-top: 1px solid #000 !important;
+                width: 100mm !important;
+                margin: 5mm auto 2mm auto !important;
+                padding-top: 2mm !important;
+            }
+
+            /* Asegurar que todos los elementos de texto tengan peso normal */
+            *, *::before, *::after {
+                font-weight: normal !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
+            /* Evitar que los elementos se corten */
+            h1, h2, h3, h4, h5, h6, p, div, span, label {
+                orphans: 2 !important;
+                widows: 2 !important;
+            }
+
+            /* Anular reglas generales de style.css que puedan interferir */
+            body {
+                font-family: "Times New Roman", serif !important;
+                font-size: 10pt !important;
+                line-height: 1.3 !important;
+                background: white !important;
+                color: black !important;
+            }
+
+            /* Configurar formularios de registro para impresión */
+            .subsection {
+                margin-bottom: 2mm !important;
+                padding: 1.5mm !important;
+                background: transparent !important;
+                border: none !important;
+                border-left: none !important;
+                border-radius: 0 !important;
+                page-break-inside: avoid !important;
+            }
+
+            .subsection h3 {
+                font-size: 9pt !important;
+                font-weight: bold !important;
+                color: black !important;
+                margin-bottom: 1.5mm !important;
+                border-bottom: 1px solid #000 !important;
+                padding-bottom: 0.8mm !important;
+                page-break-after: avoid !important;
+            }
+
+            .form-grid {
+                display: block !important;
+                margin-bottom: 1.5mm !important;
+            }
+
+            .form-group {
+                margin-bottom: 2mm !important;
+                page-break-inside: avoid !important;
+            }
+
+            .form-group label {
+                font-size: 7.5pt !important;
+                font-weight: bold !important;
+                color: black !important;
+                margin-bottom: 0.8mm !important;
+                display: block !important;
+            }
+
+            .form-control {
+                font-size: 7.5pt !important;
+                padding: 0.8mm !important;
+                border: 1px solid #000 !important;
+                border-radius: 0 !important;
+                background: white !important;
+                color: black !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .form-control:focus {
+                border-color: #000 !important;
+                box-shadow: none !important;
+            }
+
+            input[type="radio"], input[type="checkbox"] {
+                transform: scale(1.2) !important;
+                margin-top: 0.5mm !important;
+                width: 12px !important;
+                height: 12px !important;
+                border: 1px solid #000 !important;
+                border-radius: 50% !important;
+                background: white !important;
+                appearance: none !important;
+                position: relative !important;
+            }
+
+            input[type="radio"]:checked::after {
+                content: '' !important;
+                position: absolute !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: 6px !important;
+                height: 6px !important;
+                background: black !important;
+                border-radius: 50% !important;
+            }
+
+            /* Estilos de impresión para el grid de datos generales */
+            .datos-generales-grid {
+                display: table !important;
+                width: 100% !important;
+                margin-bottom: 1rem !important;
+                page-break-inside: avoid !important;
+            }
+
+            .datos-columna {
+                display: table-cell !important;
+                width: 25% !important;
+                vertical-align: top !important;
+                padding-right: 0.5rem !important;
+                page-break-inside: avoid !important;
+            }
+
+            .datos-columna:last-child {
+                padding-right: 0 !important;
+            }
+
+            /* Estilos de impresión para el grid de Hamilton */
+            .hamilton-grid {
+                display: table !important;
+                width: 100% !important;
+                margin-bottom: 1rem !important;
+                page-break-inside: avoid !important;
+            }
+
+            .hamilton-columna {
+                display: table-cell !important;
+                width: 50% !important;
+                vertical-align: top !important;
+                padding-right: 0.5rem !important;
+                page-break-inside: avoid !important;
+            }
+
+            .hamilton-columna:last-child {
+                padding-right: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+
+    <main class="container">
+        <!-- Header del documento -->
+        <div class="container text-center">
+            <h1 class="display-5 fw-bold text-primary mb-3">HAM-D - Escala de Depresión de Hamilton</h1>
+            <div class="doctor-info">
+                <p class="mb-1"><strong>Dr. Mauricio Villamandos - Médico Especialista en Psiquiatría - MP: 6469 / mn: 134131</strong></p>
+                <p class="mb-0">Resistencia, Chaco – Argentina | infopsicodinamyc@gmail.com | Teléfono: 3765 041832</p>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 1: DATOS GENERALES -->
+        <section id="seccion-1">
+            <h1>1. DATOS GENERALES</h1>
+            <div class="datos-generales-grid">
+                <!-- Columna 1: Información de evaluación y datos personales básicos -->
+                <div class="datos-columna">
+                    <!-- Información de evaluación -->
+                    <div class="subsection">
+                        <h3>Información de la Evaluación</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="lugarEvaluacion">Lugar:</label>
+                                <input type="text" id="lugarEvaluacion" class="form-control" placeholder="Consultorio particular">
+                            </div>
+                            <div class="form-group">
+                                <label for="fechaEvaluacion">Fecha:</label>
+                                <input type="date" id="fechaEvaluacion" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="modalidad">Modalidad:</label>
+                                <select id="modalidad" class="form-control">
+                                    <option value="">Seleccione...</option>
+                                    <option value="presencial">Presencial</option>
+                                    <option value="virtual">Virtual</option>
+                                    <option value="domicilio">Domicilio</option>
+                                    <option value="urgencia">Urgencia</option>
+                                    <option value="otros">Otros</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Datos personales básicos -->
+                    <div class="subsection">
+                        <h3>Datos Personales</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" id="nombre" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="apellido">Apellido:</label>
+                                <input type="text" id="apellido" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna 2: Datos demográficos y documento -->
+                <div class="datos-columna">
+                    <!-- Datos demográficos -->
+                    <div class="subsection">
+                        <h3>Datos Demográficos</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="dni">DNI:</label>
+                                <input type="text" id="dni" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="nacionalidad">Nacionalidad:</label>
+                                <select id="nacionalidad" class="form-control">
+                                    <option value="">Seleccione...</option>
+                                    <option value="Argentina">Argentino/a</option>
+                                    <option value="Paraguay">Paraguayo/a</option>
+                                    <option value="Brasil">Brasilero/a</option>
+                                    <option value="Uruguay">Uruguayo/a</option>
+                                    <option value="Bolivia">Boliviano/a</option>
+                                    <option value="Chile">Chileno/a</option>
+                                    <option value="Colombia">Colombiano/a</option>
+                                    <option value="Ecuador">Ecuatoriano/a</option>
+                                    <option value="Peru">Peruano/a</option>
+                                    <option value="Venezuela">Venezolano/a</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="sexo">Sexo/género:</label>
+                                <select id="sexo" class="form-control">
+                                    <option value="">Seleccione...</option>
+                                    <option value="masculino">Masculino</option>
+                                    <option value="femenino">Femenino</option>
+                                    <option value="no-binario">No binario</option>
+                                    <option value="otro">Otro</option>
+                                    <option value="prefiero-no-decir">Prefiero no decir</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fechaNacimiento">Fecha nacimiento:</label>
+                                <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="form-control" onchange="calcularEdad(this.value)">
+                            </div>
+                            <div class="form-group">
+                                <label for="edad">Edad:</label>
+                                <input type="text" id="edad" name="edad" class="form-control" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="estadoCivil">Estado civil:</label>
+                                <select id="estadoCivil" class="form-control">
+                                    <option value="">Seleccione...</option>
+                                    <option value="soltero">Soltero/a</option>
+                                    <option value="casado">Casado/a</option>
+                                    <option value="viudo">Viudo/a</option>
+                                    <option value="divorciado">Divorciado/a</option>
+                                    <option value="separado">Separado/a</option>
+                                    <option value="concubinato">Concubinato</option>
+                                    <option value="union-libre">Unión libre</option>
+                                    <option value="otros">Otros</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna 3: Información de contacto -->
+                <div class="datos-columna">
+                    <!-- Información de contacto -->
+                    <div class="subsection">
+                        <h3>Información de Contacto</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="domicilio">Domicilio:</label>
+                                <input type="text" id="domicilio" class="form-control" placeholder="Dirección completa">
+                            </div>
+                            <div class="form-group">
+                                <label for="codigoPostal">C.P.:</label>
+                                <input type="text" id="codigoPostal" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="celular">Celular:</label>
+                                <input type="tel" id="celular" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información profesional básica -->
+                    <div class="subsection">
+                        <h3>Información Profesional</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="ocupacion">Ocupación:</label>
+                                <input type="text" id="ocupacion" class="form-control" placeholder="Profesión/trabajo actual">
+                            </div>
+                            <div class="form-group">
+                                <label for="escolaridad">Escolaridad:</label>
+                                <select id="escolaridad" class="form-control">
+                                    <option value="">Seleccione...</option>
+                                    <option value="primario-incompleto">Primario incompleto</option>
+                                    <option value="primario-completo">Primario completo</option>
+                                    <option value="secundario-incompleto">Secundario incompleto</option>
+                                    <option value="secundario-completo">Secundario completo</option>
+                                    <option value="terciario-incompleto">Terciario incompleto</option>
+                                    <option value="terciario-completo">Terciario completo</option>
+                                    <option value="universitario-incompleto">Universitario incompleto</option>
+                                    <option value="universitario-completo">Universitario completo</option>
+                                    <option value="posgrado">Posgrado</option>
+                                    <option value="otros">Otros</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna 4: Información socioeconómica y referencias -->
+                <div class="datos-columna">
+                    <!-- Información socioeconómica -->
+                    <div class="subsection">
+                        <h3>Información Socioeconómica</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="obraSocial">Obra social:</label>
+                                <input type="text" id="obraSocial" class="form-control" placeholder="Nombre de la obra social">
+                            </div>
+                            <div class="form-group">
+                                <label for="numeroAfiliado">N° afiliado:</label>
+                                <input type="text" id="numeroAfiliado" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contactos de referencia -->
+                    <div class="subsection">
+                        <h3>Contactos de Referencia</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="referente1">Referente 1:</label>
+                                <input type="text" id="referente1" class="form-control" placeholder="Nombre y apellido">
+                            </div>
+                            <div class="form-group">
+                                <label for="contactoReferente1">Contacto:</label>
+                                <input type="tel" id="contactoReferente1" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="relacionReferente1">Relación:</label>
+                                <input type="text" id="relacionReferente1" class="form-control" placeholder="Ej: Madre, Padre, Hermano">
+                            </div>
+                            <div class="form-group">
+                                <label for="psicologo">Psicólogo/a tratante:</label>
+                                <input type="text" id="psicologo" class="form-control" placeholder="Nombre y apellido">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: ESCALA DE HAMILTON -->
+        <section id="seccion-2">
+            <h1>2. ESCALA DE DEPRESIÓN DE HAMILTON (HDRS)</h1>
+            <p class="text-muted mb-3 text-center">Complete cada ítem seleccionando la opción que mejor describa el estado del paciente.</p>
+
+            <div class="hamilton-grid">
+                <!-- Columna 1: Ítems 1-9 -->
+                <div class="hamilton-columna">
+                    <form id="hamiltonForm">
+                        <div class="item">
+                            <div class="item-title">1. Humor depresivo (tristeza, desesperanza, desamparo, sentimiento de inutilidad)</div>
+                            <div class="radio-group">
+                                <label><input type="radio" name="item1" value="0"> <span>Ausente (0)</span></label>
+                                <label><input type="radio" name="item1" value="1"> <span>Estas sensaciones las expresa solamente si le preguntan como se siente (1)</span></label>
+                                <label><input type="radio" name="item1" value="2"> <span>Estas sensaciones las relata espontáneamente (2)</span></label>
+                                <label><input type="radio" name="item1" value="3"> <span>Sensaciones no comunicadas verbalmente (expresión facial, postura, voz, tendencia al llanto) (3)</span></label>
+                                <label><input type="radio" name="item1" value="4"> <span>Manifiesta estas sensaciones en su comunicación verbal y no verbal en forma espontánea (4)</span></label>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-title">2. Sentimientos de culpa</div>
+                            <div class="radio-group">
+                                <label><input type="radio" name="item2" value="0"> <span>Ausente (0)</span></label>
+                                <label><input type="radio" name="item2" value="1"> <span>Se culpa a sí mismo, cree haber decepcionado a la gente (1)</span></label>
+                                <label><input type="radio" name="item2" value="2"> <span>Tiene ideas de culpabilidad o medita sobre errores pasados o malas acciones (2)</span></label>
+                                <label><input type="radio" name="item2" value="3"> <span>Siente que la enfermedad actual es un castigo (3)</span></label>
+                                <label><input type="radio" name="item2" value="4"> <span>Oye voces acusatorias o de denuncia y/o experimenta alucinaciones visuales de amenaza (4)</span></label>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-title">3. Suicidio</div>
+                            <div class="radio-group">
+                                <label><input type="radio" name="item3" value="0"> <span>Ausente (0)</span></label>
+                                <label><input type="radio" name="item3" value="1"> <span>Le parece que la vida no vale la pena ser vivida (1)</span></label>
+                                <label><input type="radio" name="item3" value="2"> <span>Desearía estar muerto o tiene pensamientos sobre la posibilidad de morirse (2)</span></label>
+                                <label><input type="radio" name="item3" value="3"> <span>Ideas de suicidio o amenazas (3)</span></label>
+                                <label><input type="radio" name="item3" value="4"> <span>Intentos de suicidio (cualquier intento serio) (4)</span></label>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-title">4. Insomnio precoz</div>
+                            <div class="radio-group">
+                                <label><input type="radio" name="item4" value="0"> <span>No tiene dificultad (0)</span></label>
+                                <label><input type="radio" name="item4" value="1"> <span>Dificultad ocasional para dormir, por ej. más de media hora el conciliar el sueño (1)</span></label>
+                                <label><input type="radio" name="item4" value="2"> <span>Dificultad para dormir cada noche (2)</span></label>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-title">5. Insomnio intermedio</div>
+                            <div class="radio-group">
+                                <label><input type="radio" name="item5" value="0"> <span>No hay dificultad (0)</span></label>
+                                <label><input type="radio" name="item5" value="1"> <span>Esta desvelado e inquieto o se despierta varias veces durante la noche (1)</span></label>
+                                <label><input type="radio" name="item5" value="2"> <span>Esta despierto durante la noche, cualquier ocasión de levantarse de la cama se clasifica en 2 (excepto por motivos de evacuar) (2)</span></label>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-title">6. Insomnio tardío</div>
+                            <div class="radio-group">
+                                <label><input type="radio" name="item6" value="0"> <span>No hay dificultad (0)</span></label>
+                                <label><input type="radio" name="item6" value="1"> <span>Se despierta a primeras horas de la madrugada, pero se vuelve a dormir (1)</span></label>
+                                <label><input type="radio" name="item6" value="2"> <span>No puede volver a dormirse si se levanta de la cama (2)</span></label>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-title">7. Trabajo y actividades</div>
+                            <div class="radio-group">
+                                <label><input type="radio" name="item7" value="0"> <span>No hay dificultad (0)</span></label>
+                                <label><input type="radio" name="item7" value="1"> <span>Ideas y sentimientos de incapacidad, fatiga o debilidad (trabajos, pasatiempos) (1)</span></label>
+                                <label><input type="radio" name="item7" value="2"> <span>Pérdida de interés en su actividad (disminución de la atención, indecisión y vacilación) (2)</span></label>
+                                <label><input type="radio" name="item7" value="3"> <span>Disminución del tiempo actual dedicado a actividades o disminución de la productividad (3)</span></label>
+                                <label><input type="radio" name="item7" value="4"> <span>Dejó de trabajar por la presente enfermedad. Solo se compromete en las pequeñas tareas, o no puede realizar estas sin ayuda. (4)</span></label>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-title">8. Inhibición psicomotora (lentitud de pensamiento y lenguaje, facultad de concentración disminuida, disminución de la actividad motora)</div>
+                            <div class="radio-group">
+                                <label><input type="radio" name="item8" value="0"> <span>Palabra y pensamiento normales (0)</span></label>
+                                <label><input type="radio" name="item8" value="1"> <span>Ligero retraso en el habla (1)</span></label>
+                                <label><input type="radio" name="item8" value="2"> <span>Evidente retraso en el habla (2)</span></label>
+                                <label><input type="radio" name="item8" value="3"> <span>Dificultad para expresarse (3)</span></label>
+                                <label><input type="radio" name="item8" value="4"> <span>Incapacidad para expresarse (4)</span></label>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-title">9. Agitación psicomotora</div>
+                            <div class="radio-group">
+                                <label><input type="radio" name="item9" value="0"> <span>Ninguna (0)</span></label>
+                                <label><input type="radio" name="item9" value="1"> <span>Juega con sus dedos (1)</span></label>
+                                <label><input type="radio" name="item9" value="2"> <span>Juega con sus manos, cabello, etc. (2)</span></label>
+                                <label><input type="radio" name="item9" value="3"> <span>No puede quedarse quieto ni permanecer sentado (3)</span></label>
+                                <label><input type="radio" name="item9" value="4"> <span>Retuerce las manos, se muerde las uñas, se tira de los cabellos, se muerde los labios (4)</span></label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Columna 2: Ítems 10-17 -->
+                <div class="hamilton-columna">
+                    <div class="item">
+                        <div class="item-title">10. Ansiedad psíquica</div>
+                        <div class="radio-group">
+                            <label><input type="radio" name="item10" value="0"> <span>No hay dificultad (0)</span></label>
+                            <label><input type="radio" name="item10" value="1"> <span>Tensión subjetiva e irritabilidad (1)</span></label>
+                            <label><input type="radio" name="item10" value="2"> <span>Preocupación por pequeñas cosas (2)</span></label>
+                            <label><input type="radio" name="item10" value="3"> <span>Actitud aprensiva en la expresión o en el habla (3)</span></label>
+                            <label><input type="radio" name="item10" value="4"> <span>Expresa sus temores sin que le pregunten (4)</span></label>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="item-title">11. Ansiedad somática (signos físicos de ansiedad: gastrointestinales, cardiovasculares, respiratorios, etc.)</div>
+                        <div class="radio-group">
+                            <label><input type="radio" name="item11" value="0"> <span>Ausente (0)</span></label>
+                            <label><input type="radio" name="item11" value="1"> <span>Ligera (1)</span></label>
+                            <label><input type="radio" name="item11" value="2"> <span>Moderada (2)</span></label>
+                            <label><input type="radio" name="item11" value="3"> <span>Severa (3)</span></label>
+                            <label><input type="radio" name="item11" value="4"> <span>Incapacitante (4)</span></label>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="item-title">12. Síntomas somáticos gastrointestinales</div>
+                        <div class="radio-group">
+                            <label><input type="radio" name="item12" value="0"> <span>Ninguno (0)</span></label>
+                            <label><input type="radio" name="item12" value="1"> <span>Pérdida del apetito pero come sin necesidad de que lo estimulen. Sensación de pesadez en el abdomen (1)</span></label>
+                            <label><input type="radio" name="item12" value="2"> <span>Dificultad en comer si no se le insiste. Solicita laxantes o medicación intestinal para sus síntomas gastrointestinales (2)</span></label>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="item-title">13. Síntomas somáticos generales</div>
+                        <div class="radio-group">
+                            <label><input type="radio" name="item13" value="0"> <span>Ninguno (0)</span></label>
+                            <label><input type="radio" name="item13" value="1"> <span>Pesadez en las extremidades, espalda o cabeza. Dorsalgias. Cefaleas, algias musculares. (1)</span></label>
+                            <label><input type="radio" name="item13" value="2"> <span>Pérdida de energía y fatigabilidad. Cualquier síntoma bien definido (2)</span></label>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="item-title">14. Síntomas genitales (disminución de la libido y trastornos menstruales)</div>
+                        <div class="radio-group">
+                            <label><input type="radio" name="item14" value="0"> <span>Ausente (0)</span></label>
+                            <label><input type="radio" name="item14" value="1"> <span>Débil (1)</span></label>
+                            <label><input type="radio" name="item14" value="2"> <span>Grave (2)</span></label>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="item-title">15. Hipocondría</div>
+                        <div class="radio-group">
+                            <label><input type="radio" name="item15" value="0"> <span>Ausente (0)</span></label>
+                            <label><input type="radio" name="item15" value="1"> <span>Preocupado de si mismo (corporalmente) (1)</span></label>
+                            <label><input type="radio" name="item15" value="2"> <span>Preocupado por su salud (2)</span></label>
+                            <label><input type="radio" name="item15" value="3"> <span>Se lamenta constantemente, solicita ayuda (3)</span></label>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="item-title">16. Pérdida de peso</div>
+                        <div class="radio-group">
+                            <label><input type="radio" name="item16" value="0"> <span>Pérdida de peso inferior a 500 gr. en una semana (0)</span></label>
+                            <label><input type="radio" name="item16" value="1"> <span>Pérdida de más de 500 gr. en una semana (1)</span></label>
+                            <label><input type="radio" name="item16" value="2"> <span>Pérdida de más de 1 Kg. en una semana (2)</span></label>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="item-title">17. Introspección (insight)</div>
+                        <div class="radio-group">
+                            <label><input type="radio" name="item17" value="0"> <span>Se da cuenta que está deprimido y enfermo (0)</span></label>
+                            <label><input type="radio" name="item17" value="1"> <span>Se da cuenta de su enfermedad pero atribuye la causa a la mala alimentación, clima, exceso de trabajo, virus, necesidad de descanso, etc. (1)</span></label>
+                            <label><input type="radio" name="item17" value="2"> <span>No se da cuenta que está enfermo (2)</span></label>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button type="button" id="calculateBtn" class="btn btn-primary no-print">Calcular Puntuación</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULTADOS Y FIRMA -->
+        <div id="result" class="no-print">
+            <h3 class="text-center">Resultado de la Escala de Hamilton</h3>
+            <p class="mb-3 text-center">Puntuación total: <span id="totalScore">0</span>/52</p>
+            <div class="interpretation" id="interpretation"></div>
+        </div>
+
+        <div class="reference text-center">
+            Basado en la versión de 17 ítems recomendada por el Instituto Nacional de Salud Mental de los Estados Unidos
+        </div>
+
+        <div class="signature-section text-center">
+            <img src="../images/firma_digital.png" alt="Firma Digital" class="signature-image">
+            <p class="text-center mt-3">Firma y sello profesional</p>
+            <p class="text-center"><strong>Dr. Mauricio Villamandos</strong></p>
+            <p class="text-center">Psiquiatra - M.P.: 6469 / M.N.: 134131</p>
+            <div class="signature-line"></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="d-flex justify-content-center gap-3 mb-3 flex-wrap">
+                <button class="btn btn-primary btn-print no-print" onclick="window.print()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+                <button class="btn btn-success btn-save no-print" onclick="guardarDocumento()">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+                <button class="btn btn-warning btn-next no-print" onclick="siguienteParte()">
+                    <i class="fas fa-arrow-right"></i> Siguiente Parte
+                </button>
+            </div>
+            <p class="text-center mb-2"><strong>Psi.Co.Di.Na.M.& C. [HCPE] v2.0® &copy; 2025 - [Historia Clínica Psiquiátrica Electrónica]</strong></p>
+            <p class="text-center mb-2"><strong>[Dr. Mauricio Villamandos]</strong></p>
+            <p class="text-center mb-2"><strong>Resistencia, Chaco - Argentina</strong></p>
+            <div class="text-center">
+                
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            let total = 0;
+            for (let i = 1; i <= 17; i++) {
+                const selected = document.querySelector(`input[name="item${i}"]:checked`);
+                if (selected) total += parseInt(selected.value);
+            }
+            document.getElementById('totalScore').textContent = total;
+            document.getElementById('result').style.display = 'block';
+
+            let interpretation = "";
+            if (total <= 7) interpretation = "Normal - Sin depresión significativa";
+            else if (total <= 16) interpretation = "Depresión leve";
+            else if (total <= 23) interpretation = "Depresión moderada";
+            else if (total <= 35) interpretation = "Depresión severa";
+            else interpretation = "Depresión muy severa";
+
+            document.getElementById('interpretation').textContent = interpretation;
+        });
+
+        function guardarDocumento() {
+            // Aquí puedes implementar la lógica para guardar en base de datos o localStorage
+            alert('Documento guardado correctamente.');
+        }
+
+        function siguienteParte() {
+            // Aquí puedes implementar la navegación a otra parte del formulario
+            alert('Esta funcionalidad estará disponible en la próxima actualización.');
+        }
+
+        // Función mejorada para imprimir
+        function imprimirDocumento() {
+            // Asegurar que los resultados se muestren antes de imprimir
+            const resultDiv = document.getElementById('result');
+            if (resultDiv.style.display === 'none' || resultDiv.style.display === '') {
+                // Calcular automáticamente si no se ha hecho
+                document.getElementById('calculateBtn').click();
+            }
+
+            // Pequeño delay para asegurar que los estilos se apliquen
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        }
+
+        // Atajos de teclado para impresión
+        document.addEventListener('keydown', function(event) {
+            // Ctrl+P o Cmd+P para imprimir
+            if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
+                event.preventDefault();
+                imprimirDocumento();
+            }
+        });
+    </script>
+</body>
+</html>

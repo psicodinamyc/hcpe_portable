@@ -16,12 +16,21 @@
 <body>
     
     <!-- Header -->
-    <header class="bg-light py-2 mb-2 border-bottom">
-        <div class="container text-center">
-            <h1 class="display-6 fw-bold mb-1">HCPE - Historia Clínica Psiquiátrica Electrónica [version offline]</h1>
-            <div class="doctor-info">
-                <p class="mb-0" style="font-size: 0.85rem;"><strong>Dr. Mauricio Villamandos - Médico Especialista en Psiquiatría - M.N.: 134131 - <M class="P :6469"></M></strong></p>
-                <p class="mb-0" style="font-size: 0.75rem;"><strong>Resistencia, Chaco – Argentina | infopsicodinamyc@gmail.com | Teléfono: 3765 041832</strong></p>
+    <header class="bg-light py-2 mb-2 border-bottom no-print">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-center flex-grow-1">
+                    <h1 class="display-6 fw-bold mb-1">HCPE - Historia Clínica Psiquiátrica Electrónica [version offline]</h1>
+                    <div class="doctor-info">
+                        <p class="mb-0" style="font-size: 0.85rem;"><strong>Dr. Mauricio Villamandos - Médico Especialista en Psiquiatría - M.N.: 134131</strong></p>
+                        <p class="mb-0" style="font-size: 0.75rem;"><strong>Resistencia, Chaco – Argentina | infopsicodinamyc@gmail.com | Teléfono: 3765 041832</strong></p>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary btn-sm" onclick="window.open('pacientes.html', '_blank')" title="Ver listado de pacientes">
+                        <i class="fas fa-users"></i> Pacientes
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -103,7 +112,12 @@
                 </div>
                 <div class="form-group">
                     <label>1G. DNI:</label>
-                    <input type="text" id="dni" class="form-control">
+                    <div class="input-group">
+                        <input type="text" id="dni" class="form-control" placeholder="Ingrese DNI para buscar o crear">
+                        <button type="button" class="btn btn-primary btn-sm" onclick="buscarPacientePorDNI()" title="Buscar paciente por DNI">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>1H. Nacionalidad:</label>
@@ -271,6 +285,9 @@
 
         <section class="form-section section-4 antecedentes-psiquiatricos">
             <h2>4. ANTECEDENTES PSIQUIÁTRICOS</h2>
+            
+            <div class="section-4-grid">
+            
             <div class="form-group">
                 <label>4A. Diagnósticos/Presuntivos previos:</label>
                 <textarea id="diagnosticosPrevios" class="form-control"></textarea>
@@ -302,7 +319,7 @@
                 </div>
             </div>
             
-            <div class="form-group">
+            <div class="form-group full-width">
                 <h4><label>4C. Intentos de suicidio previos:</label></h4>
                 <select id="intentosSuicidio" class="form-control">
                     <option value="">Seleccione...</option>
@@ -327,7 +344,7 @@
                 </div>
             </div>
             
-            <div class="form-group">
+            <div class="form-group full-width">
                 <h4><label>4D. Tratamientos previos:</label></h4>
                 <textarea id="tratamientosPrevios" class="form-control"></textarea>
                 <div class="voice-controls">
@@ -366,10 +383,15 @@
                     </div>
                 </div>
             </div>
+            
+            </div><!-- Cierre section-4-grid -->
         </section>
 
         <section class="form-section section-5 antecedentes-medicos">
             <h2>5. ANTECEDENTES MÉDICOS</h2>
+            
+            <div class="section-5-grid">
+            
             <div class="form-group">
                 <h4><label>5A. Enfermedades médicas Agudas/Semi Agudas:</label></h4>
                 <select id="enfermedades" class="form-control">
@@ -424,70 +446,28 @@
                 </div>
             </div>
             
-            <div class="form-group">
+            <div class="form-group full-width">
                 <h4><label>5D. Consumo de sustancias:</label></h4>
-                <select id="consumoSustancias" class="form-control">
-                    <option value="">Seleccione...</option>
-                    <option value="si">Sí</option>
-                    <option value="no">No</option>
-                </select>
-               
-                <div class="sub-options mt-3">
-                    <div class="form-group">
-                        <h4><label>5D1. Alcohol:</label></h4>
-                        <select id="alcoholSelect" class="form-control">
-                            <option value="">Seleccione...</option>
-                            <option value="si">Sí</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <h4><label>5D2. Opiáceos:</label></h4>
-                        <select id="opiaceosSelect" class="form-control">
-                            <option value="">Seleccione...</option>
-                            <option value="si">Sí</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <h4><label>5D3. Marihuana:</label></h4>
-                        <select id="marihuanaSelect" class="form-control">
-                            <option value="">Seleccione...</option>
-                            <option value="si">Sí</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <h4><label>5D4. Cocaina:</label></h4>
-                        <select id="cocainaSelect" class="form-control">
-                            <option value="">Seleccione...</option>
-                            <option value="si">Sí</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <h4><label>5D5. Sinteticas o diseño:</label></h4>
-                        <select id="sinteticasSelect" class="form-control">
-                            <option value="">Seleccione...</option>
-                            <option value="si">Sí</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <h4><label>5D6. Drogas ilícitas:</label></h4>
-                        <textarea id="drogasilicitas" class="form-control"></textarea>
-                        <div class="voice-controls">
-                        <button onclick="iniciarDictado('drogasilicitas')" class="btn btn-sm btn-outline-secondary">
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="consumoAlcohol" name="consumoSustancias" value="alcohol"> Alcohol</label>
+                    <label><input type="checkbox" id="consumoOpiaceos" name="consumoSustancias" value="opiaceos"> Opiáceos</label>
+                    <label><input type="checkbox" id="consumoMarihuana" name="consumoSustancias" value="marihuana"> Marihuana</label>
+                    <label><input type="checkbox" id="consumoCocaina" name="consumoSustancias" value="cocaina"> Cocaína</label>
+                    <label><input type="checkbox" id="consumoSinteticas" name="consumoSustancias" value="sinteticas"> Sintéticas o diseño</label>
+                    <label><input type="checkbox" id="consumoNinguno" name="consumoSustancias" value="ninguno"> Ninguno</label>
+                </div>
+                <textarea id="consumoSustanciasObservacion" class="form-control mt-2" placeholder="Observaciones"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('consumoSustanciasObservacion')" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-microphone"></i> Dictar
-                        </button>
-                        <button onclick="leer('drogasilicitas')" class="btn btn-sm btn-outline-secondary">
+                    </button>
+                    <button onclick="leer('consumoSustanciasObservacion')" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-volume-up"></i> Leer
                     </button>
                 </div>
             </div>
             
-            <div class="form-group">
+            <div class="form-group full-width">
                 <h4><label>5E. Antecedentes Ginecoobstetricos (si corresponde):</label></h4>
                 <textarea id="antecedentesGineco" class="form-control"></textarea>
                 <div class="voice-controls">
@@ -499,10 +479,15 @@
                     </button>
                 </div>
             </div>
+            
+            </div><!-- Cierre section-5-grid -->
         </section>
 
         <section class="form-section section-6 antecedentes-familiares">
             <h2>6. ANTECEDENTES FAMILIARES</h2>
+            
+            <div class="section-6-grid">
+            
             <div class="form-group">
                 <h4><label>6A. Historia de enfermedad psiquiátrica en la familia:</label></h4>
                 <textarea id="historiaFamiliarPsiquiatrica" class="form-control"></textarea>
@@ -547,10 +532,15 @@
                 <h4><label>6C1.Parentesco:</label></h4>
                 <input type="text" id="parentescoConsumo" class="form-control">
             </div>
+            
+            </div><!-- Cierre section-6-grid -->
         </section>
 
         <section class="form-section section-7 historia-psicosocial">
             <h2>7. HISTORIA PSICOSOCIAL</h2>
+            
+            <div class="section-7-grid">
+            
             <div class="form-group">
                 <h4><label>7A. Dinámica familiar actual:</label></h4>
                 <textarea id="dinamicaFamiliar" class="form-control"></textarea>
@@ -587,6 +577,8 @@
                     </button>
                 </div>
             </div>
+            
+            </div><!-- Cierre section-7-grid -->
         </section>
 
         <section class="form-section section-8 exploracion-psicopatologica">
@@ -862,12 +854,13 @@
                 </div>
                 
                 <div class="form-group">
-                    <h4><label>8D2. Pseudoalucinaciones:</label></h4>
-                    <div class="radio-group">
-                        <label><input type="radio" name="pseudoalucinaciones" value="presentes"> Presentes</label>
-                        <label><input type="radio" name="pseudoalucinaciones" value="ausentes"> Ausentes</label>
-                        <label><input type="checkbox"> Otros.</label>
-                    </div>
+                    <h4><label for="pseudoalucinaciones">8D2. Pseudoalucinaciones:</label></h4>
+                    <select id="pseudoalucinaciones" name="pseudoalucinaciones" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                        <option value="presentes">Presentes</option>
+                        <option value="ausentes">Ausentes</option>
+                        <option value="otros">Otros</option>
+                    </select>
                     <textarea id="observacionPseudoalucinaciones" class="form-control mt-2" placeholder="Observación"></textarea>
                     <div class="voice-controls">
                         <button onclick="iniciarDictado('observacionPseudoalucinaciones')" class="btn btn-sm btn-outline-secondary">
@@ -880,11 +873,13 @@
                 </div>
                 
                 <div class="form-group">
-                    <h4><label>8D3. Ilusiones:</label></h4>
-                    <div class="radio-group">
-                        <label><input type="radio" name="ilusiones" value="presentes"> Presentes</label>
-                        <label><input type="radio" name="ilusiones" value="ausentes"> Ausentes</label>
-                    </div>
+                    <h4><label for="ilusiones">8D3. Ilusiones:</label></h4>
+                    <select id="ilusiones" name="ilusiones" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                        <option value="presentes">Presentes</option>
+                        <option value="ausentes">Ausentes</option>
+                        <option value="otros">Otros</option>
+                    </select>
                     <textarea id="observacionIlusiones" class="form-control mt-2" placeholder="Observación"></textarea>
                     <div class="voice-controls">
                         <button onclick="iniciarDictado('observacionIlusiones')" class="btn btn-sm btn-outline-secondary">
@@ -897,11 +892,13 @@
                 </div>
                 
                 <div class="form-group">
-                    <h4><label>8D4. Despersonalización:</label></h4>
-                    <div class="radio-group">
-                        <label><input type="radio" name="despersonalizacion" value="presente"> Presente</label>
-                        <label><input type="radio" name="despersonalizacion" value="ausente"> Ausente</label>
-                    </div>
+                    <h4><label for="despersonalizacion">8D4. Despersonalización:</label></h4>
+                    <select id="despersonalizacion" name="despersonalizacion" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                        <option value="presente">Presente</option>
+                        <option value="ausente">Ausente</option>
+                        <option value="otros">Otros</option>
+                    </select>
                     <textarea id="observacionDespersonalizacion" class="form-control mt-2" placeholder="Observación"></textarea>
                     <div class="voice-controls">
                         <button onclick="iniciarDictado('observacionDespersonalizacion')" class="btn btn-sm btn-outline-secondary">
@@ -914,11 +911,13 @@
                 </div>
                 
                 <div class="form-group">
-                    <h4><label>8D5. Desrealización:</label></h4>
-                    <div class="radio-group">
-                        <label><input type="radio" name="desrealizacion" value="presente"> Presente</label>
-                        <label><input type="radio" name="desrealizacion" value="ausente"> Ausente</label>
-                    </div>
+                    <h4><label for="desrealizacion">8D5. Desrealización:</label></h4>
+                    <select id="desrealizacion" name="desrealizacion" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                        <option value="presente">Presente</option>
+                        <option value="ausente">Ausente</option>
+                        <option value="otros">Otros</option>
+                    </select>
                     <textarea id="observacionDesrealizacion" class="form-control mt-2" placeholder="Observación"></textarea>
                     <div class="voice-controls">
                         <button onclick="iniciarDictado('observacionDesrealizacion')" class="btn btn-sm btn-outline-secondary">
@@ -936,13 +935,14 @@
             <div class="subsection-grid">
             
             <div class="form-group">
-                <h4><label>8E1. Orientación en tiempo: ¿Sabe qué día, mes, año y hora es?</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="orientacion_tiempo" value="conservada"> Conservada</label>
-                    <label><input type="radio" name="orientacion_tiempo" value="parcial"> Parcialmente alterada</label>
-                    <label><input type="radio" name="orientacion_tiempo" value="alterada"> Totalmente alterada</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="orientacion_tiempo">8E1. Orientación en tiempo: ¿Sabe qué día, mes, año y hora es?</label></h4>
+                <select id="orientacion_tiempo" name="orientacion_tiempo" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservada">Conservada</option>
+                    <option value="parcial">Parcialmente alterada</option>
+                    <option value="alterada">Totalmente alterada</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionOrientacionTiempo" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionOrientacionTiempo')" class="btn btn-sm btn-outline-secondary">
@@ -955,12 +955,13 @@
             </div>
             
             <div class="form-group">
-                <h4><label>8E2. Orientación en espacio: ¿Sabe dónde se encuentra (lugar, ciudad, institución)?</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="orientacion_espacio" value="conservada"> Conservada</label>
-                    <label><input type="radio" name="orientacion_espacio" value="parcial"> Parcialmente alterada</label>
-                    <label><input type="radio" name="orientacion_espacio" value="alterada"> Totalmente alterada</label>
-                </div>
+                <h4><label for="orientacion_espacio">8E2. Orientación en espacio: ¿Sabe dónde se encuentra (lugar, ciudad, institución)?</label></h4>
+                <select id="orientacion_espacio" name="orientacion_espacio" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservada">Conservada</option>
+                    <option value="parcial">Parcialmente alterada</option>
+                    <option value="alterada">Totalmente alterada</option>
+                </select>
                 <textarea id="observacionOrientacionEspacio" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionOrientacionEspacio')" class="btn btn-sm btn-outline-secondary">
@@ -973,13 +974,14 @@
             </div>
             
             <div class="form-group">
-                <h4><label>8E3. Orientación personal: ¿Reconoce quién es, su nombre, edad, situación personal?</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="orientacion_personal" value="conservada"> Conservada</label>
-                    <label><input type="radio" name="orientacion_personal" value="parcial"> Parcialmente alterada</label>
-                    <label><input type="radio" name="orientacion_personal" value="alterada"> Totalmente alterada</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="orientacion_personal">8E3. Orientación personal: ¿Reconoce quién es, su nombre, edad, situación personal?</label></h4>
+                <select id="orientacion_personal" name="orientacion_personal" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservada">Conservada</option>
+                    <option value="parcial">Parcialmente alterada</option>
+                    <option value="alterada">Totalmente alterada</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionOrientacionPersonal" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionOrientacionPersonal')" class="btn btn-sm btn-outline-secondary">
@@ -992,13 +994,14 @@
             </div>
             
             <div class="form-group">
-                <h4><label>8E4. Orientación social (opcional): ¿Reconoce a las personas que lo rodean, roles, vínculos familiares?</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="orientacion_social" value="conservada"> Conservada</label>
-                    <label><input type="radio" name="orientacion_social" value="parcial"> Parcialmente alterada</label>
-                    <label><input type="radio" name="orientacion_social" value="alterada"> Totalmente alterada</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="orientacion_social">8E4. Orientación social (opcional): ¿Reconoce a las personas que lo rodean, roles, vínculos familiares?</label></h4>
+                <select id="orientacion_social" name="orientacion_social" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservada">Conservada</option>
+                    <option value="parcial">Parcialmente alterada</option>
+                    <option value="alterada">Totalmente alterada</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionOrientacionSocial" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionOrientacionSocial')" class="btn btn-sm btn-outline-secondary">
@@ -1011,15 +1014,16 @@
             </div>
             
             <div class="form-group">
-                <h4><label>8F1. Atención: Evalúa si el paciente mantiene el foco, responde adecuadamente o se muestra disperso.</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="atencion" value="conservada"> Conservada</label>
-                    <label><input type="radio" name="atencion" value="distraida"> Distraída fácilmente</label>
-                    <label><input type="radio" name="atencion" value="hipervigilante"> Hipervigilante</label>
-                    <label><input type="radio" name="atencion" value="hipoactiva"> Hipoactiva</label>
-                    <label><input type="radio" name="atencion" value="ausente"> Ausente</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="atencion">8F1. Atención: Evalúa si el paciente mantiene el foco, responde adecuadamente o se muestra disperso.</label></h4>
+                <select id="atencion" name="atencion" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservada">Conservada</option>
+                    <option value="distraida">Distraída fácilmente</option>
+                    <option value="hipervigilante">Hipervigilante</option>
+                    <option value="hipoactiva">Hipoactiva</option>
+                    <option value="ausente">Ausente</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionAtencion" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionAtencion')" class="btn btn-sm btn-outline-secondary">
@@ -1032,14 +1036,15 @@
             </div>
             
             <div class="form-group">
-                <h4><label>8F2. Concentración: Observada durante el diálogo, lectura, cálculo mental, o en la ejecución de tareas simples.</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="concentracion" value="conservada"> Conservada</label>
-                    <label><input type="radio" name="concentracion" value="lenta"> Lenta</label>
-                    <label><input type="radio" name="concentracion" value="fluctuante"> Fluctuante</label>
-                    <label><input type="radio" name="concentracion" value="imposible"> Imposible de sostener</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="concentracion">8F2. Concentración: Observada durante el diálogo, lectura, cálculo mental, o en la ejecución de tareas simples.</label></h4>
+                <select id="concentracion" name="concentracion" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservada">Conservada</option>
+                    <option value="lenta">Lenta</option>
+                    <option value="fluctuante">Fluctuante</option>
+                    <option value="imposible">Imposible de sostener</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionConcentracion" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionConcentracion')" class="btn btn-sm btn-outline-secondary">
@@ -1058,13 +1063,14 @@
             <div class="subsection-grid">
             
             <div class="form-group">
-                <h4><label>8G1. Memoria Inmediata (retención de datos recién presentados):</label></h4>
-                    <div class="radio-group">
-                        <label><input type="radio" name="memoria_inmediata" value="conservada"> Conservada</label>
-                        <label><input type="radio" name="memoria_inmediata" value="disminuida"> Disminuida</label>
-                        <label><input type="radio" name="memoria_inmediata" value="ausente"> Ausente</label>
-                        <label><input type="checkbox"> Otros.</label>
-                    </div>
+                <h4><label for="memoria_inmediata">8G1. Memoria Inmediata (retención de datos recién presentados):</label></h4>
+                    <select id="memoria_inmediata" name="memoria_inmediata" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                        <option value="conservada">Conservada</option>
+                        <option value="disminuida">Disminuida</option>
+                        <option value="ausente">Ausente</option>
+                        <option value="otros">Otros</option>
+                    </select>
                     <textarea id="observacionMemoriaInmediata" class="form-control mt-2" placeholder="Observación"></textarea>
                     <div class="voice-controls">
                         <button onclick="iniciarDictado('observacionMemoriaInmediata')" class="btn btn-sm btn-outline-secondary">
@@ -1077,13 +1083,14 @@
                 </div>
                 
                 <div class="form-group">
-                    <h4><label>8G2. Memoria reciente (últimas horas o días):</label></h4>
-                    <div class="radio-group">
-                        <label><input type="radio" name="memoria_reciente" value="conservada"> Conservada</label>
-                        <label><input type="radio" name="memoria_reciente" value="disminuida"> Disminuida</label>
-                        <label><input type="radio" name="memoria_reciente" value="ausente"> Ausente</label>
-                        <label><input type="checkbox"> Otros.</label>
-                    </div>
+                    <h4><label for="memoria_reciente">8G2. Memoria reciente (últimas horas o días):</label></h4>
+                    <select id="memoria_reciente" name="memoria_reciente" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                        <option value="conservada">Conservada</option>
+                        <option value="disminuida">Disminuida</option>
+                        <option value="ausente">Ausente</option>
+                        <option value="otros">Otros</option>
+                    </select>
                     <textarea id="observacionMemoriaReciente" class="form-control mt-2" placeholder="Observación"></textarea>
                     <div class="voice-controls">
                         <button onclick="iniciarDictado('observacionMemoriaReciente')" class="btn btn-sm btn-outline-secondary">
@@ -1096,13 +1103,14 @@
                 </div>
                 
                 <div class="form-group">
-                    <h4><label>8G3. Memoria remota (hechos antiguos, biográficos):</label></h4>
-                    <div class="radio-group">
-                        <label><input type="radio" name="memoria_remota" value="conservada"> Conservada</label>
-                        <label><input type="radio" name="memoria_remota" value="disminuida"> Disminuida</label>
-                        <label><input type="radio" name="memoria_remota" value="ausente"> Ausente</label>
-                        <label><input type="checkbox"> Otros.</label>
-                    </div>
+                    <h4><label for="memoria_remota">8G3. Memoria remota (hechos antiguos, biográficos):</label></h4>
+                    <select id="memoria_remota" name="memoria_remota" class="form-control">
+                        <option value="">Seleccione una opción</option>
+                        <option value="conservada">Conservada</option>
+                        <option value="disminuida">Disminuida</option>
+                        <option value="ausente">Ausente</option>
+                        <option value="otros">Otros</option>
+                    </select>
                     <textarea id="observacionMemoriaRemota" class="form-control mt-2" placeholder="Observación"></textarea>
                     <div class="voice-controls">
                         <button onclick="iniciarDictado('observacionMemoriaRemota')" class="btn btn-sm btn-outline-secondary">
@@ -1115,13 +1123,14 @@
                 </div>
             
             <div class="form-group">
-                <h4><label>8H1. Iniciativa (comenzar una acción):</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="iniciativa" value="conservada"> Conservada – Inicia actividades por sí mismo.</label>
-                    <label><input type="radio" name="iniciativa" value="disminuida"> Disminuida – Requiere estímulo externo.</label>
-                    <label><input type="radio" name="iniciativa" value="ausente"> Ausente – No inicia ninguna acción, incluso básica.</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="iniciativa">8H1. Iniciativa (comenzar una acción):</label></h4>
+                <select id="iniciativa" name="iniciativa" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservada">Conservada – Inicia actividades por sí mismo.</option>
+                    <option value="disminuida">Disminuida – Requiere estímulo externo.</option>
+                    <option value="ausente">Ausente – No inicia ninguna acción, incluso básica.</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionIniciativa" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionIniciativa')" class="btn btn-sm btn-outline-secondary">
@@ -1134,13 +1143,14 @@
             </div>
             
             <div class="form-group">
-                <h4><label>8H2. Perseverancia (mantener una acción):</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="perseverancia" value="conservada"> Conservada – Completa tareas y mantiene su curso.</label>
-                    <label><input type="radio" name="perseverancia" value="disminuida"> Disminuida – Se distrae fácilmente, abandona tareas.</label>
-                    <label><input type="radio" name="perseverancia" value="ausente"> Ausente – Incapacidad total para sostener una acción.</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="perseverancia">8H2. Perseverancia (mantener una acción):</label></h4>
+                <select id="perseverancia" name="perseverancia" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservada">Conservada – Completa tareas y mantiene su curso.</option>
+                    <option value="disminuida">Disminuida – Se distrae fácilmente, abandona tareas.</option>
+                    <option value="ausente">Ausente – Incapacidad total para sostener una acción.</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionPerseverancia" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionPerseverancia')" class="btn btn-sm btn-outline-secondary">
@@ -1153,13 +1163,14 @@
             </div>
             
             <div class="form-group">
-                <h4><label>8H3. Interés en actividades previas:</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="interes" value="conservado"> Conservado – Participa con gusto en lo que antes le gustaba.</label>
-                    <label><input type="radio" name="interes" value="disminuido"> Disminuido – Muestra desinterés parcial.</label>
-                    <label><input type="radio" name="interes" value="ausente"> Ausente – Anhedonia marcada; abandono total de intereses.</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="interes">8H3. Interés en actividades previas:</label></h4>
+                <select id="interes" name="interes" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservado">Conservado – Participa con gusto en lo que antes le gustaba.</option>
+                    <option value="disminuido">Disminuido – Muestra desinterés parcial.</option>
+                    <option value="ausente">Ausente – Anhedonia marcada; abandono total de intereses.</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionInteres" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionInteres')" class="btn btn-sm btn-outline-secondary">
@@ -1178,14 +1189,15 @@
             <div class="subsection-grid">
             
             <div class="form-group">
-                <h4><label>8I1. Actividad motora global:</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="actividad_motora" value="normal"> Normal – Movimiento y postura adecuados.</label>
-                    <label><input type="radio" name="actividad_motora" value="hipocinesia"> Hipocinesia – Lentitud, inhibición, escasa gesticulación.</label>
-                    <label><input type="radio" name="actividad_motora" value="hipercinesia"> Hipercinesia – Inquietud motora, agitación.</label>
-                    <label><input type="radio" name="actividad_motora" value="acinesia"> Acinesia – Inmovilidad, rigidez postural.</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="actividad_motora">8I1. Actividad motora global:</label></h4>
+                <select id="actividad_motora" name="actividad_motora" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="normal">Normal – Movimiento y postura adecuados.</option>
+                    <option value="hipocinesia">Hipocinesia – Lentitud, inhibición, escasa gesticulación.</option>
+                    <option value="hipercinesia">Hipercinesia – Inquietud motora, agitación.</option>
+                    <option value="acinesia">Acinesia – Inmovilidad, rigidez postural.</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionActividadMotora" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionActividadMotora')" class="btn btn-sm btn-outline-secondary">
@@ -1198,14 +1210,15 @@
             </div>
             
             <div class="form-group">
-                <h4><label>8I2. Postura:</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="postura" value="espontanea"> Espontánea / relajada.</label>
-                    <label><input type="radio" name="postura" value="tensa"> Tensa / rígida.</label>
-                    <label><input type="radio" name="postura" value="inusual"> Inusual / extraña (ej. posturas bizarras o mantenidas).</label>
-                    <label><input type="radio" name="postura" value="catatonica"> Catatónica (ej. flexibilidad cérea, negativismo)</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="postura">8I2. Postura:</label></h4>
+                <select id="postura" name="postura" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="espontanea">Espontánea / relajada.</option>
+                    <option value="tensa">Tensa / rígida.</option>
+                    <option value="inusual">Inusual / extraña (ej. posturas bizarras o mantenidas).</option>
+                    <option value="catatonica">Catatónica (ej. flexibilidad cérea, negativismo)</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionPostura" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionPostura')" class="btn btn-sm btn-outline-secondary">
@@ -1241,15 +1254,18 @@
                 </div>
             </div>
             
+            <h3 style="color: #007bff; grid-column: 1 / -1;">8J. Juicio e Introspección</h3>
+            
             <div class="form-group">
-                <h4><label>8J1. Juicio:</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="juicio" value="conservado"> Conservado – Evaluación realista y conducta ajustada.</label>
-                    <label><input type="radio" name="juicio" value="parcial"> Parcialmente alterado – Algunas distorsiones en razonamiento o autocrítica.</label>
-                    <label><input type="radio" name="juicio" value="alterado"> Alterado – Decisiones incoherentes con la realidad o autopercepción deficiente.</label>
-                    <label><input type="radio" name="juicio" value="grave"> Gravemente alterado / Ausente – Pérdida total de criterio sobre realidad, enfermedad o riesgos</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="juicio">8J1. Juicio:</label></h4>
+                <select id="juicio" name="juicio" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservado">Conservado – Evaluación realista y conducta ajustada.</option>
+                    <option value="parcial">Parcialmente alterado – Algunas distorsiones en razonamiento o autocrítica.</option>
+                    <option value="alterado">Alterado – Decisiones incoherentes con la realidad o autopercepción deficiente.</option>
+                    <option value="grave">Gravemente alterado / Ausente – Pérdida total de criterio sobre realidad, enfermedad o riesgos</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionJuicio" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionJuicio')" class="btn btn-sm btn-outline-secondary">
@@ -1262,15 +1278,17 @@
             </div>
             
             <div class="form-group">
-                <h4><label>8J2. Tipos clásicos de alteración del juicio:</label></h4>
-                <div class="checkbox-group">
-                    <label><input type="checkbox"> Juicio suspendido – Incapacidad total para evaluar la realidad.</label>
-                    <label><input type="checkbox"> Juicio desviado – El razonamiento es lógico, pero parte de premisas falsas (ej. delirios).</label>
-                    <label><input type="checkbox"> Juicio debilitado – Falta de profundidad o superficialidad en la toma de decisiones.</label>
-                    <label><input type="checkbox"> Juicio influenciado – Distorsionado por emociones intensas o ideología rígida.</label>
-                    <label><input type="checkbox"> Juicio inmaduro – Propio de personas con desarrollo psicoemocional infantilizado.</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="tiposJuicio">8J2. Tipos clásicos de alteración del juicio:</label></h4>
+                <select id="tiposJuicio" name="tiposJuicio" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="suspendido">Juicio suspendido – Incapacidad total para evaluar la realidad.</option>
+                    <option value="desviado">Juicio desviado – El razonamiento es lógico, pero parte de premisas falsas (ej. delirios).</option>
+                    <option value="debilitado">Juicio debilitado – Falta de profundidad o superficialidad en la toma de decisiones.</option>
+                    <option value="influenciado">Juicio influenciado – Distorsionado por emociones intensas o ideología rígida.</option>
+                    <option value="inmaduro">Juicio inmaduro – Propio de personas con desarrollo psicoemocional infantilizado.</option>
+                    <option value="ninguno">Ninguno</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionTiposJuicio" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionTiposJuicio')" class="btn btn-sm btn-outline-secondary">
@@ -1283,15 +1301,16 @@
             </div>
             
             <div class="form-group">
-                <h4><label>8J3. Introspección (conciencia de enfermedad):</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="introspeccion" value="ausente"> Ausente – Niega totalmente la enfermedad; puede rechazar todo tratamiento.</label>
-                    <label><input type="radio" name="introspeccion" value="minima"> Mínima – Reconoce síntomas, pero los atribuye a causas externas o minimiza su gravedad.</label>
-                    <label><input type="radio" name="introspeccion" value="parcial"> Parcial – Acepta parcialmente el diagnóstico, pero con dudas o resistencia.</label>
-                    <label><input type="radio" name="introspeccion" value="adecuada"> Adecuada – Reconoce claramente la enfermedad y colabora con el tratamiento.</label>
-                    <label><input type="radio" name="introspeccion" value="critica"> Crítica – Comprende profundamente su cuadro, evolución y necesidad terapéutica.</label>
-                    <label><input type="checkbox"> Otros.</label>
-                </div>
+                <h4><label for="introspeccion">8J3. Introspección (conciencia de enfermedad):</label></h4>
+                <select id="introspeccion" name="introspeccion" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="ausente">Ausente – Niega totalmente la enfermedad; puede rechazar todo tratamiento.</option>
+                    <option value="minima">Mínima – Reconoce síntomas, pero los atribuye a causas externas o minimiza su gravedad.</option>
+                    <option value="parcial">Parcial – Acepta parcialmente el diagnóstico, pero con dudas o resistencia.</option>
+                    <option value="adecuada">Adecuada – Reconoce claramente la enfermedad y colabora con el tratamiento.</option>
+                    <option value="critica">Crítica – Comprende profundamente su cuadro, evolución y necesidad terapéutica.</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="observacionIntrospeccion" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('observacionIntrospeccion')" class="btn btn-sm btn-outline-secondary">
@@ -1303,7 +1322,344 @@
                 </div>
             </div>
             
-            </div><!-- Cierre subsection-grid 8I y 8J -->
+            <h3 style="color: #007bff; grid-column: 1 / -1;">8K. Conciencia</h3>
+            
+            <div class="form-group">
+                <h4><label for="estadoConciencia">8K1. Estado de conciencia:</label></h4>
+                <select id="estadoConciencia" name="estadoConciencia" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="vigil">Vigil – Despierto, alerta, responde adecuadamente.</option>
+                    <option value="somnoliento">Somnoliento – Tendencia al sueño, despierta con estímulos leves.</option>
+                    <option value="obnubilado">Obnubilado – Respuesta enlentecida, desorientación leve.</option>
+                    <option value="estuporoso">Estuporoso – Solo responde a estímulos intensos.</option>
+                    <option value="coma">Coma – Sin respuesta a estímulos.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionConciencia" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionConciencia')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionConciencia')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h4><label for="claridadConciencia">8K2. Claridad de conciencia:</label></h4>
+                <select id="claridadConciencia" name="claridadConciencia" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="lucida">Lúcida – Pensamiento claro, atención intacta.</option>
+                    <option value="obnubilada">Obnubilada – Pensamiento confuso, dificultad para mantener atención.</option>
+                    <option value="crepuscular">Crepuscular – Estado de estrechamiento de conciencia.</option>
+                    <option value="onirica">Onírica – Experiencias similares al sueño estando despierto.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionClaridadConciencia" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionClaridadConciencia')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionClaridadConciencia')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <h3 style="color: #007bff; grid-column: 1 / -1;">8L. Lenguaje y Comunicación</h3>
+            
+            <div class="form-group">
+                <h4><label for="fluenciaVerbal">8L1. Fluencia verbal:</label></h4>
+                <select id="fluenciaVerbal" name="fluenciaVerbal" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="fluida">Fluida – Expresión verbal sin dificultades.</option>
+                    <option value="empobrecida">Empobrecida – Vocabulario reducido, frases cortas.</option>
+                    <option value="logorrea">Logorrea – Verborragia, habla excesiva.</option>
+                    <option value="mutismo">Mutismo – Ausencia de habla.</option>
+                    <option value="disartria">Disartria – Dificultad en articulación.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionFluenciaVerbal" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionFluenciaVerbal')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionFluenciaVerbal')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h4><label for="prosodia">8L2. Prosodia (entonación):</label></h4>
+                <select id="prosodia" name="prosodia" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="normal">Normal – Entonación adecuada al contexto.</option>
+                    <option value="monotona">Monótona – Sin variaciones en el tono.</option>
+                    <option value="exagerada">Exagerada – Entonación excesivamente variable.</option>
+                    <option value="inapropiada">Inapropiada – Entonación discordante con el contenido.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionProsodia" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionProsodia')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionProsodia')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h4><label for="comprensionVerbal">8L3. Comprensión verbal:</label></h4>
+                <select id="comprensionVerbal" name="comprensionVerbal" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservada">Conservada – Comprende instrucciones simples y complejas.</option>
+                    <option value="dificultad_leve">Dificultad leve – Requiere repetición o simplificación.</option>
+                    <option value="dificultad_moderada">Dificultad moderada – Solo comprende instrucciones simples.</option>
+                    <option value="dificultad_severa">Dificultad severa – Comprensión muy limitada.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionComprension" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionComprension')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionComprension')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h4><label for="alteracionesLenguaje">8L4. Alteraciones específicas del lenguaje:</label></h4>
+                <select id="alteracionesLenguaje" name="alteracionesLenguaje" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="ninguna">Ninguna observada</option>
+                    <option value="neologismos">Neologismos – Creación de palabras nuevas.</option>
+                    <option value="ecolalia">Ecolalia – Repetición de palabras del interlocutor.</option>
+                    <option value="verbigeracion">Verbigeración – Repetición de palabras o frases sin sentido.</option>
+                    <option value="ensalada_palabras">Ensalada de palabras – Palabras inconexas.</option>
+                    <option value="latencia_aumentada">Latencia de respuesta aumentada</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionAlteracionesLenguaje" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionAlteracionesLenguaje')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionAlteracionesLenguaje')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <h3 style="color: #007bff; grid-column: 1 / -1;">8M. Inteligencia</h3>
+            
+            <div class="form-group">
+                <h4><label for="inteligenciaClinica">8M1. Estimación clínica de inteligencia:</label></h4>
+                <select id="inteligenciaClinica" name="inteligenciaClinica" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="superior">Superior – Rendimiento cognitivo por encima del promedio.</option>
+                    <option value="normal">Normal – Funcionamiento intelectual dentro del rango esperado.</option>
+                    <option value="limite">Límite – Entre rango normal y deficitario (CI 70-85).</option>
+                    <option value="deficitaria_leve">Deficitaria leve – Discapacidad intelectual leve.</option>
+                    <option value="deficitaria_moderada">Deficitaria moderada – Discapacidad intelectual moderada.</option>
+                    <option value="deficitaria_grave">Deficitaria grave/severa – Discapacidad intelectual grave.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionInteligencia" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionInteligencia')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionInteligencia')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h4><label for="funcionamientoCognitivo">8M2. Funcionamiento cognitivo global:</label></h4>
+                <select id="funcionamientoCognitivo" name="funcionamientoCognitivo" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservado">Conservado – Sin deterioro aparente.</option>
+                    <option value="deterioro_leve">Deterioro leve – Dificultades sutiles en tareas complejas.</option>
+                    <option value="deterioro_moderado">Deterioro moderado – Afectación en actividades cotidianas.</option>
+                    <option value="deterioro_severo">Deterioro severo – Dependencia marcada.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionFuncionamiento" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionFuncionamiento')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionFuncionamiento')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <h3 style="color: #007bff; grid-column: 1 / -1;">8N. Sueño y Ritmos Biológicos</h3>
+            
+            <div class="form-group">
+                <h4><label for="patronSueno">8N1. Patrón de sueño:</label></h4>
+                <select id="patronSueno" name="patronSueno" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="normal">Normal – 6-8 horas, reparador.</option>
+                    <option value="insomnio_conciliacion">Insomnio de conciliación – Dificultad para iniciar el sueño.</option>
+                    <option value="insomnio_mantenimiento">Insomnio de mantenimiento – Despertares frecuentes.</option>
+                    <option value="despertar_precoz">Despertar precoz – Despertar temprano sin poder volver a dormir.</option>
+                    <option value="hipersomnia">Hipersomnia – Sueño excesivo (>10 horas).</option>
+                    <option value="sueno_fragmentado">Sueño fragmentado – Múltiples interrupciones.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionSueno" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionSueno')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionSueno')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h4><label for="apetito">8N2. Apetito:</label></h4>
+                <select id="apetito" name="apetito" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="conservado">Conservado – Sin cambios significativos.</option>
+                    <option value="aumentado">Aumentado – Hiperfagia, compulsión alimentaria.</option>
+                    <option value="disminuido">Disminuido – Hiporexia, pérdida del interés en comer.</option>
+                    <option value="anorexia">Anorexia – Rechazo marcado de alimentos.</option>
+                    <option value="selectivo">Selectivo – Restricción a ciertos alimentos.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionApetito" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionApetito')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionApetito')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h4><label for="ritmoCircadiano">8N3. Alteraciones del ritmo circadiano:</label></h4>
+                <select id="ritmoCircadiano" name="ritmoCircadiano" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="normal">Normal – Ciclo vigilia-sueño conservado.</option>
+                    <option value="inversion">Inversión – Duerme de día, despierto de noche.</option>
+                    <option value="irregular">Irregular – Sin patrón definido.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionRitmo" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionRitmo')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionRitmo')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <h3 style="color: #007bff; grid-column: 1 / -1;">8O. Impulsos y Control</h3>
+            
+            <div class="form-group">
+                <h4><label for="heteroagresividad">8O1. Heteroagresividad:</label></h4>
+                <select id="heteroagresividad" name="heteroagresividad" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="ausente">Ausente – Sin conductas agresivas.</option>
+                    <option value="verbal">Verbal – Insultos, amenazas.</option>
+                    <option value="fisica_leve">Física leve – Empujones, gestos amenazantes.</option>
+                    <option value="fisica_moderada">Física moderada – Golpes, daño a objetos.</option>
+                    <option value="fisica_grave">Física grave – Violencia severa, riesgo vital.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionHeteroagresividad" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionHeteroagresividad')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionHeteroagresividad')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h4><label for="autoagresividad">8O2. Autoagresividad:</label></h4>
+                <select id="autoagresividad" name="autoagresividad" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="ausente">Ausente – Sin conductas autolesivas.</option>
+                    <option value="ideacion">Ideación – Pensamientos sin conductas.</option>
+                    <option value="leve">Leve – Rasguños superficiales, pellizcos.</option>
+                    <option value="moderada">Moderada – Cortes, quemaduras autoinfligidas.</option>
+                    <option value="grave">Grave – Lesiones severas, intentos suicidas.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionAutoagresividad" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionAutoagresividad')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionAutoagresividad')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h4><label for="impulsividad">8O3. Impulsividad:</label></h4>
+                <select id="impulsividad" name="impulsividad" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="ausente">Ausente – Control adecuado de impulsos.</option>
+                    <option value="leve">Leve – Dificultad ocasional para controlar impulsos.</option>
+                    <option value="moderada">Moderada – Conductas impulsivas frecuentes.</option>
+                    <option value="severa">Severa – Pérdida marcada del control de impulsos.</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionImpulsividad" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionImpulsividad')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionImpulsividad')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h4><label for="conductasRiesgo">8O4. Conductas de riesgo:</label></h4>
+                <select id="conductasRiesgo" name="conductasRiesgo" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="ausentes">Ausentes</option>
+                    <option value="sexuales">Sexuales de riesgo</option>
+                    <option value="consumo">Consumo de sustancias</option>
+                    <option value="conduccion">Conducción temeraria</option>
+                    <option value="ludopatia">Juego patológico</option>
+                    <option value="multiples">Múltiples conductas de riesgo</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="observacionConductasRiesgo" class="form-control mt-2" placeholder="Observación"></textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('observacionConductasRiesgo')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('observacionConductasRiesgo')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            </div><!-- Cierre subsection-grid 8K-8O -->
             
             </div><!-- Cierre section-8-grid -->
         </section>
@@ -1462,14 +1818,15 @@
                 </div>
             </div>
             <div class="form-group">
-                <h4><label>10B. Frecuencia de seguimiento:</label></h4>
-                <div class="radio-group">
-                    <label><input type="radio" name="frecuencia" value="semanal" id="frecuenciaSemanal"> Semanal</label>
-                    <label><input type="radio" name="frecuencia" value="quincenal" id="frecuenciaQuincenal"> Quincenal</label>
-                    <label><input type="radio" name="frecuencia" value="mensual" id="frecuenciaMensual"> Mensual</label>
-                    <label><input type="checkbox" id="frecuenciaOtros"> Otros.</label>
-                </div>
-                <textarea id="frecuenciaSeguimiento" class="form-control" placeholder="Observación"></textarea>
+                <h4><label for="frecuenciaSeguimientoSelect">10B. Frecuencia de seguimiento:</label></h4>
+                <select id="frecuenciaSeguimientoSelect" name="frecuenciaSeguimientoSelect" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="semanal">Semanal</option>
+                    <option value="quincenal">Quincenal</option>
+                    <option value="mensual">Mensual</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="frecuenciaSeguimiento" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('frecuenciaSeguimiento')" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-microphone"></i> Dictar
@@ -1490,12 +1847,13 @@
             
             <div class="form-group">
                 <label>11A. Pronóstico:</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="pronostico" value="bueno" id="pronosticoBueno"> Bueno</label>
-                    <label><input type="radio" name="pronostico" value="reservado" id="pronosticoReservado"> Reservado</label>
-                    <label><input type="radio" name="pronostico" value="malo" id="pronosticoMalo"> Malo</label>
-                    <label><input type="checkbox" id="pronosticoOtros"> Otros</label>
-                </div>
+                <select id="pronostico" name="pronostico" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="bueno">Bueno</option>
+                    <option value="reservado">Reservado</option>
+                    <option value="malo">Malo</option>
+                    <option value="otros">Otros</option>
+                </select>
                 <textarea id="pronosticoObservacion" class="form-control mt-2" placeholder="Observación"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('pronosticoObservacion')" class="btn btn-sm btn-outline-secondary">
@@ -1509,10 +1867,11 @@
             
             <div class="form-group">
                 <label>11B. Reevaluación:</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="reevaluacion" value="si" id="reevaluacionSi"> Sí</label>
-                    <label><input type="radio" name="reevaluacion" value="no" id="reevaluacionNo"> No</label>
-                </div>
+                <select id="reevaluacion" name="reevaluacion" class="form-control">
+                    <option value="">Seleccione una opción</option>
+                    <option value="si">Sí</option>
+                    <option value="no">No</option>
+                </select>
                 <textarea id="reevaluacionObservacion" class="form-control mt-2" placeholder="Observacion"></textarea>
                 <div class="voice-controls">
                     <button onclick="iniciarDictado('reevaluacionObservacion')" class="btn btn-sm btn-outline-secondary">
@@ -1546,13 +1905,13 @@
         <div class="signature-section">
             <img src="images/firma_digital.png" alt="Firma Digital" style="max-width: 300px; margin: 0 auto; display: block;">
             <p><strong>Dr. Mauricio Villamandos</strong></p>
-            <p>Psiquiatra - M.P.: 07489</p>
+            <p>Psiquiatra - M.P. (Chaco): 6469 / M.N.: 134131</p>
         </div>
     </main>
 
     <footer class="footer">
         <div class="container">
-            <div class="d-flex justify-content-center gap-3 mb-3">
+            <div class="d-flex justify-content-center gap-2 mb-3 flex-wrap">
                 <button class="btn btn-primary btn-print no-print" onclick="imprimir()">
                     <i class="fas fa-print"></i> Imprimir
                 </button>
@@ -1568,7 +1927,14 @@
                 <button class="btn btn-warning btn-next no-print" onclick="siguienteParte()" disabled>
                     <i class="fas fa-arrow-right"></i> Siguiente Parte
                 </button>
+                <button class="btn btn-secondary btn-sm no-print" onclick="exportarBackupDesdeHCPE()" title="Exportar backup completo">
+                    <i class="fas fa-download"></i> Backup
+                </button>
+                <button class="btn btn-secondary btn-sm no-print" onclick="document.getElementById('importarBackupInputHCPE').click()" title="Importar backup">
+                    <i class="fas fa-upload"></i> Restore
+                </button>
             </div>
+            <input type="file" id="importarBackupInputHCPE" accept=".json" style="display: none;" onchange="importarBackupDesdeHCPE(event)">
             
             <div>
                 <p><strong>[HCPE] v2.0® &copy; 2025 - [Historia Clínica Psiquiátrica Electrónica] version offline</strong></p>

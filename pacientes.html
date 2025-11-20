@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Pacientes - HCPE</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .paciente-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .paciente-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-color: #0066cc;
+        }
+        .paciente-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .paciente-nombre {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+        }
+        .paciente-dni {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .paciente-fecha {
+            color: #999;
+            font-size: 0.85rem;
+        }
+        .btn-group-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            margin-bottom: 20px;
+        }
+        .stats-bar {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-light py-3 mb-3 border-bottom">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0">📋 Listado de Pacientes</h1>
+                    <p class="text-muted mb-0 small">Sistema de Gestión de Historias Clínicas</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-success btn-sm" onclick="exportarBackup()" title="Exportar backup completo">
+                        <i class="fas fa-download"></i> Exportar Backup
+                    </button>
+                    <button class="btn btn-warning btn-sm" onclick="document.getElementById('importarBackupInput').click()" title="Importar backup">
+                        <i class="fas fa-upload"></i> Importar Backup
+                    </button>
+                    <input type="file" id="importarBackupInput" accept=".json" style="display: none;" onchange="importarBackup(event)">
+                    <button class="btn btn-primary" onclick="window.location.href='hcpe.html'">
+                        <i class="fas fa-plus"></i> Nueva Historia Clínica
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Estadísticas -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number" id="totalPacientes">0</div>
+                <div class="stat-label">Pacientes Registrados</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalHistorias">0</div>
+                <div class="stat-label">Historias Clínicas</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalEvoluciones">0</div>
+                <div class="stat-label">Evoluciones Registradas</div>
+            </div>
+        </div>
+
+        <!-- Buscador -->
+        <div class="search-box">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" id="buscarPaciente" class="form-control" placeholder="Buscar por nombre, apellido o DNI...">
+            </div>
+        </div>
+
+        <!-- Lista de pacientes -->
+        <div id="listaPacientes">
+            <!-- Se cargará dinámicamente -->
+        </div>
+
+        <!-- Estado vacío -->
+        <div id="estadoVacio" class="empty-state" style="display: none;">
+            <i class="fas fa-folder-open"></i>
+            <h3>No hay pacientes registrados</h3>
+            <p>Comienza creando una nueva historia clínica</p>
+            <button class="btn btn-primary mt-3" onclick="window.location.href='hcpe.html'">
+                <i class="fas fa-plus"></i> Crear Primera Historia Clínica
+            </button>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Cargar listado de pacientes al iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarListadoPacientes();
+            
+            // Buscador en tiempo real
+            document.getElementById('buscarPaciente').addEventListener('input', function(e) {
+                filtrarPacientes(e.target.value);
+            });
+        });
+
+        function cargarListadoPacientes() {
+            const pacientes = obtenerPacientes();
+            const evoluciones = contarEvoluciones();
+            
+            // Actualizar estadísticas
+            document.getElementById('totalPacientes').textContent = pacientes.length;
+            document.getElementById('totalHistorias').textContent = pacientes.length;
+            document.getElementById('totalEvoluciones').textContent = evoluciones;
+            
+            const listaPacientes = document.getElementById('listaPacientes');
+            const estadoVacio = document.getElementById('estadoVacio');
+            
+            if (pacientes.length === 0) {
+                listaPacientes.style.display = 'none';
+                estadoVacio.style.display = 'block';
+                return;
+            }
+            
+            listaPacientes.style.display = 'block';
+            estadoVacio.style.display = 'none';
+            
+            let html = '';
+            
+            pacientes.forEach(paciente => {
+                const fecha = new Date(paciente.timestamp).toLocaleString('es-AR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                html += `
+                    <div class="paciente-card" data-dni="${paciente.dni}" data-nombre="${paciente.nombreCompleto.toLowerCase()}">
+                        <div class="paciente-header">
+                            <div>
+                                <div class="paciente-nombre">${paciente.nombreCompleto}</div>
+                                <div class="paciente-dni">DNI: ${paciente.dni}</div>
+                                <div class="paciente-fecha">
+                                    <i class="fas fa-clock"></i> Última modificación: ${fecha}
+                                </div>
+                            </div>
+                            <div class="btn-group-actions">
+                                <button class="btn btn-sm btn-primary" onclick="abrirHistoriaClinica('${paciente.dni}')" title="Abrir Historia Clínica">
+                                    <i class="fas fa-folder-open"></i> Abrir HC
+                                </button>
+                                <button class="btn btn-sm btn-success" onclick="abrirEvolucion('${paciente.dni}')" title="Nueva Evolución">
+                                    <i class="fas fa-file-medical"></i> Evolución
+                                </button>
+                                <button class="btn btn-sm btn-info" onclick="verEvoluciones('${paciente.dni}')" title="Ver Evoluciones">
+                                    <i class="fas fa-history"></i> Historial
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="eliminarPaciente('${paciente.dni}')" title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            listaPacientes.innerHTML = html;
+        }
+
+        function obtenerPacientes() {
+            const pacientes = [];
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('hcpe_') && key !== 'hcpe_indice_pacientes' && key !== 'hcpe_autosave' && key !== 'hcpe_cargar_ultimo') {
+                    try {
+                        const datos = JSON.parse(localStorage.getItem(key));
+                        pacientes.push({
+                            dni: datos.dni || key.replace('hcpe_', ''),
+                            nombreCompleto: datos.nombreCompleto || 'Sin nombre',
+                            timestamp: datos.timestamp,
+                            key: key
+                        });
+                    } catch (error) {
+                        console.error('Error al leer paciente:', key);
+                    }
+                }
+            }
+            
+            return pacientes.sort((a, b) => a.nombreCompleto.localeCompare(b.nombreCompleto));
+        }
+
+        function contarEvoluciones() {
+            let total = 0;
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('evol_')) {
+                    total++;
+                }
+            }
+            return total;
+        }
+
+        function filtrarPacientes(termino) {
+            const cards = document.querySelectorAll('.paciente-card');
+            const terminoLower = termino.toLowerCase();
+            
+            cards.forEach(card => {
+                const dni = card.dataset.dni;
+                const nombre = card.dataset.nombre;
+                
+                if (dni.includes(terminoLower) || nombre.includes(terminoLower)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function abrirHistoriaClinica(dni) {
+            window.location.href = `hcpe.html?dni=${dni}`;
+        }
+
+        function abrirEvolucion(dni) {
+            window.location.href = `evolucion.html?dni=${dni}`;
+        }
+
+        function verEvoluciones(dni) {
+            window.location.href = `evolucion.html?dni=${dni}&ver=historial`;
+        }
+
+        function eliminarPaciente(dni) {
+            const key = `hcpe_${dni}`;
+            const datos = JSON.parse(localStorage.getItem(key));
+            
+            const confirmar = confirm(`¿Está seguro de eliminar la historia clínica de:\n\n${datos.nombreCompleto}\nDNI: ${dni}\n\n⚠️ Esta acción NO se puede deshacer.\n\nTambién se eliminarán todas las evoluciones asociadas.`);
+            
+            if (confirmar) {
+                // Eliminar historia clínica
+                localStorage.removeItem(key);
+                
+                // Eliminar todas las evoluciones del paciente
+                const evoluciones = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const evKey = localStorage.key(i);
+                    if (evKey && evKey.startsWith(`evol_${dni}_`)) {
+                        evoluciones.push(evKey);
+                    }
+                }
+                
+                evoluciones.forEach(evKey => localStorage.removeItem(evKey));
+                
+                // Actualizar índice
+                let indice = localStorage.getItem('hcpe_indice_pacientes');
+                if (indice) {
+                    indice = JSON.parse(indice);
+                    delete indice[dni];
+                    localStorage.setItem('hcpe_indice_pacientes', JSON.stringify(indice));
+                }
+                
+                alert(`✓ Historia clínica eliminada\n\nSe eliminaron ${evoluciones.length} evoluciones asociadas.`);
+                
+                // Recargar listado
+                cargarListadoPacientes();
+            }
+        }
+
+        // =====================================================
+        // BACKUP Y RESTORE DEL SISTEMA COMPLETO
+        // =====================================================
+        function exportarBackup() {
+            try {
+                // Recolectar TODOS los datos de localStorage relacionados con HCPE
+                const backup = {
+                    version: '2.0',
+                    fecha: new Date().toISOString(),
+                    datos: {}
+                };
+                
+                // Recorrer todo localStorage
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    
+                    // Solo exportar claves relacionadas con HCPE
+                    if (key && (key.startsWith('hcpe_') || key.startsWith('evol_'))) {
+                        backup.datos[key] = localStorage.getItem(key);
+                    }
+                }
+                
+                // Contar elementos
+                const totalHistorias = Object.keys(backup.datos).filter(k => k.startsWith('hcpe_') && k !== 'hcpe_indice_pacientes' && k !== 'hcpe_autosave' && k !== 'hcpe_cargar_ultimo').length;
+                const totalEvoluciones = Object.keys(backup.datos).filter(k => k.startsWith('evol_')).length;
+                
+                // Crear archivo JSON
+                const json = JSON.stringify(backup, null, 2);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                // Descargar archivo
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `HCPE_Backup_${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+                
+                alert(`✓ Backup exportado exitosamente\n\n📊 Contenido:\n- ${totalHistorias} historias clínicas\n- ${totalEvoluciones} evoluciones\n\n💾 Archivo: HCPE_Backup_${new Date().toISOString().split('T')[0]}.json`);
+                
+                console.log('💾 Backup exportado:', totalHistorias, 'HCs,', totalEvoluciones, 'evoluciones');
+                
+            } catch (error) {
+                console.error('Error al exportar backup:', error);
+                alert('❌ Error al exportar backup.\n\nVerifique la consola para más detalles.');
+            }
+        }
+
+        function importarBackup(event) {
+            const file = event.target.files[0];
+            
+            if (!file) return;
+            
+            // Confirmar importación
+            const confirmar = confirm(`⚠️ ADVERTENCIA\n\n¿Está seguro de importar este backup?\n\nEsto puede:\n- Sobrescribir pacientes existentes con el mismo DNI\n- Agregar nuevos pacientes del backup\n\nSe recomienda exportar un backup actual antes de continuar.\n\n¿Desea continuar?`);
+            
+            if (!confirmar) {
+                event.target.value = ''; // Limpiar input
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    
+                    // Validar estructura
+                    if (!backup.version || !backup.datos) {
+                        throw new Error('Formato de backup inválido');
+                    }
+                    
+                    // Contar elementos
+                    const totalHistorias = Object.keys(backup.datos).filter(k => k.startsWith('hcpe_') && k !== 'hcpe_indice_pacientes' && k !== 'hcpe_autosave' && k !== 'hcpe_cargar_ultimo').length;
+                    const totalEvoluciones = Object.keys(backup.datos).filter(k => k.startsWith('evol_')).length;
+                    
+                    // Importar todos los datos
+                    let importados = 0;
+                    for (const key in backup.datos) {
+                        localStorage.setItem(key, backup.datos[key]);
+                        importados++;
+                    }
+                    
+                    alert(`✓ Backup importado exitosamente\n\n📊 Contenido importado:\n- ${totalHistorias} historias clínicas\n- ${totalEvoluciones} evoluciones\n- Total: ${importados} registros\n\nFecha del backup: ${new Date(backup.fecha).toLocaleString()}`);
+                    
+                    // Recargar listado
+                    cargarListadoPacientes();
+                    
+                    console.log('📥 Backup importado:', importados, 'registros');
+                    
+                } catch (error) {
+                    console.error('Error al importar backup:', error);
+                    alert('❌ Error al importar backup.\n\nAsegúrese de que el archivo sea un backup válido exportado desde HCPE.');
+                }
+                
+                // Limpiar input para permitir reimportar el mismo archivo
+                event.target.value = '';
+            };
+            
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>

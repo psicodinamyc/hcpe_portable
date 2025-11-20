@@ -39,6 +39,51 @@ header {
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
         grid-column: 1 / -1;
+        align-items: start;
+    }
+    
+    .subsection-grid .form-group {
+        align-self: start;
+    }
+    
+    /* Grid para sección 4 */
+    .section-4-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        align-items: start;
+    }
+    
+    .section-4-grid .full-width {
+        grid-column: 1 / -1;
+    }
+    
+    /* Grid para sección 5 */
+    .section-5-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        align-items: start;
+    }
+    
+    .section-5-grid .full-width {
+        grid-column: 1 / -1;
+    }
+    
+    /* Grid para sección 6 */
+    .section-6-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        align-items: start;
+    }
+    
+    /* Grid para sección 7 */
+    .section-7-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        align-items: start;
     }
 }
 
@@ -173,6 +218,8 @@ header {
 textarea {
     min-height: 60px;
     font-size: 0.85rem;
+    overflow: hidden;
+    resize: vertical;
 }
 
 input, select {
@@ -212,181 +259,292 @@ input, select {
     }
 }
 
-/* Estilos para impresión - ULTRA COMPACTO */
+/* Estilos para impresión */
 @media print {
     @page {
         size: A4;
-        margin: 8mm 10mm;
+        margin: 10mm 12mm;
     }
 
     html, body {
         font-family: "Arial", "Helvetica", sans-serif;
-        font-size: 7pt !important;
-        line-height: 1.05 !important;
+        font-size: 9pt !important;
+        line-height: 1.2 !important;
         margin: 0 !important;
         padding: 0 !important;
-        font-weight: normal !important;
     }
 
-    .no-print, .scales-toolbar, .voice-controls, .navbar, .footer {
+    /* Ocultar elementos no imprimibles */
+    .no-print, 
+    .scales-toolbar, 
+    .voice-controls, 
+    .navbar, 
+    .footer,
+    button,
+    .btn,
+    nav {
         display: none !important;
     }
 
+    /* Header compacto */
     header {
-        padding: 1px 0 !important;
-        margin-bottom: 2px !important;
+        padding: 2mm 0 !important;
+        margin-bottom: 3mm !important;
+        border-bottom: 1pt solid #000;
     }
 
     header h1 {
-        font-size: 10pt !important;
-        margin-bottom: 1px !important;
-        line-height: 1 !important;
+        font-size: 14pt !important;
+        margin-bottom: 1mm !important;
+        line-height: 1.1 !important;
     }
 
     header p {
-        font-size: 6pt !important;
-        margin-bottom: 0.5px !important;
-        line-height: 1 !important;
+        font-size: 8pt !important;
+        margin-bottom: 0.5mm !important;
+        line-height: 1.1 !important;
     }
 
+    .doctor-info p {
+        font-size: 8pt !important;
+        line-height: 1.1 !important;
+    }
+
+    /* Container sin padding */
     .container {
         padding: 0 !important;
+        max-width: 100% !important;
     }
 
     main {
         padding: 0 !important;
     }
 
+    /* Secciones del formulario */
     .form-section {
         page-break-inside: auto;
         border-left: none;
-        padding: 1px 0 !important;
+        padding: 1mm 0 !important;
         background-color: transparent !important;
-        margin-bottom: 2px !important;
+        margin-bottom: 2mm !important;
     }
 
-    .form-section h1 {
-        font-size: 8.5pt !important;
-        margin-bottom: 1px !important;
-        padding-bottom: 0.5px !important;
+    .form-section h1, .form-section h2 {
+        font-size: 11pt !important;
+        margin-bottom: 2mm !important;
+        padding-bottom: 1mm !important;
         border-bottom: 0.5pt solid #000;
-        line-height: 1 !important;
-    }
-
-    .form-section h2 {
-        font-size: 8.5pt !important;
-        margin-bottom: 1px !important;
-        padding-bottom: 0.5px !important;
-        border-bottom: 0.5pt solid #000;
-        line-height: 1 !important;
+        line-height: 1.1 !important;
+        color: #000 !important;
     }
 
     .form-section h3 {
-        font-size: 7.5pt !important;
-        margin: 1px 0 0.5px 0 !important;
-        line-height: 1 !important;
+        font-size: 10pt !important;
+        margin: 2mm 0 1mm 0 !important;
+        line-height: 1.1 !important;
+        color: #000 !important;
     }
 
     .form-section h4 {
-        font-size: 7pt !important;
-        margin: 1px 0 0.5px 0 !important;
+        font-size: 9pt !important;
+        margin: 1mm 0 !important;
         font-weight: bold;
-        line-height: 1 !important;
+        line-height: 1.1 !important;
     }
 
+    /* Grid en impresión - mantener layout de 2 columnas */
     .form-grid {
         display: grid !important;
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 1px 3px !important;
-        margin-bottom: 1px !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 2mm 4mm !important;
+        margin-bottom: 2mm !important;
     }
 
+    .section-8-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 4mm !important;
+    }
+
+    .section-8-grid h3 {
+        grid-column: 1 / -1 !important;
+    }
+
+    .subsection-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 2mm !important;
+        grid-column: 1 / -1 !important;
+    }
+    
+    /* Grid para secciones 4 y 5 en impresión */
+    .section-4-grid,
+    .section-5-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 3mm !important;
+        align-items: start !important;
+    }
+    
+    .section-4-grid .full-width,
+    .section-5-grid .full-width {
+        grid-column: 1 / -1 !important;
+    }
+    
+    /* Grid para secciones 6 y 7 en impresión */
+    .section-6-grid,
+    .section-7-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 3mm !important;
+        align-items: start !important;
+    }
+
+    /* Form groups */
     .form-group {
-        margin-bottom: 1px !important;
-        page-break-inside: avoid;
+        margin-bottom: 2mm !important;
+        page-break-inside: auto;
     }
 
     .form-group label {
-        font-size: 6.5pt !important;
+        font-size: 8.5pt !important;
         font-weight: 600;
-        margin-bottom: 0.5px !important;
+        margin-bottom: 0.5mm !important;
         display: block;
-        line-height: 1 !important;
+        line-height: 1.1 !important;
     }
 
-    input, select, textarea {
-        font-size: 6.5pt !important;
-        padding: 0.5px 1px !important;
+    /* Inputs y controles */
+    input[type="text"], 
+    input[type="date"], 
+    input[type="number"],
+    input[type="email"],
+    input[type="tel"],
+    select, 
+    textarea {
+        font-size: 8.5pt !important;
+        padding: 0.5mm 1mm !important;
         border: none !important;
         border-bottom: 0.5pt solid #666 !important;
         background: transparent !important;
         width: 100% !important;
-        min-height: 10px !important;
-        font-weight: normal !important;
-        line-height: 1 !important;
+        line-height: 1.2 !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
     textarea {
-        min-height: 15px !important;
-        max-height: 35px !important;
-        line-height: 1.05 !important;
-        overflow: hidden !important;
+        min-height: 8mm !important;
+        line-height: 1.2 !important;
+        overflow: visible !important;
+        resize: none !important;
     }
 
     select {
         -webkit-appearance: none;
         appearance: none;
+        background: transparent !important;
     }
 
-    /* Ocultar placeholders en impresión */
-    input::placeholder,
-    textarea::placeholder,
-    select::placeholder {
-        color: transparent !important;
-        opacity: 0 !important;
+    /* Radio buttons y checkboxes */
+    .radio-group, .checkbox-group {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1mm !important;
+        font-size: 8pt !important;
     }
 
-    /* Asegurar que todo el texto tenga peso normal */
-    p, span, div, label, td, th, li, h1, h2, h3, h4, h5, h6 {
-        font-weight: 400 !important;
+    .radio-group label, .checkbox-group label {
+        display: flex !important;
+        align-items: center !important;
+        gap: 2mm !important;
+        font-weight: normal !important;
+        line-height: 1.1 !important;
     }
 
+    input[type="radio"], input[type="checkbox"] {
+        width: 3mm !important;
+        height: 3mm !important;
+        min-width: 3mm !important;
+        border: 0.5pt solid #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Sección de firma */
     .signature-section {
-        margin-top: 4px !important;
+        margin-top: 5mm !important;
         page-break-inside: avoid;
+        text-align: center;
     }
 
     .signature-section p {
-        font-size: 7pt !important;
-        margin: 1px 0 !important;
-        line-height: 1 !important;
+        font-size: 9pt !important;
+        margin: 1mm 0 !important;
+        line-height: 1.1 !important;
     }
 
+    .signature-section img {
+        max-width: 80mm !important;
+        margin: 2mm auto !important;
+        display: block !important;
+    }
+
+    /* Mostrar header de impresión solo al imprimir */
+    .print-only {
+        display: block !important;
+    }
+
+    /* Estilos específicos para evoluciones */
+    .button-group {
+        display: none !important;
+    }
+
+    /* Rangos y controles especiales en evoluciones */
+    input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 3mm;
+        background: #ddd;
+        border-radius: 1mm;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 4mm;
+        height: 4mm;
+        background: #0066cc;
+        border-radius: 50%;
+    }
+
+    /* Axis groups para diagnóstico multiaxial */
     .axis-group {
-        margin-bottom: 2px !important;
+        margin-bottom: 3mm !important;
         page-break-inside: avoid;
     }
 
-    .checkbox-group, .radio-group {
-        font-size: 6.5pt !important;
-        gap: 0.5px !important;
-        line-height: 1 !important;
+    /* Evitar saltos de página molestos solo en títulos */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+    
+    /* Mantener juntos ciertos elementos críticos */
+    .axis-group,
+    .signature-section {
+        page-break-inside: avoid;
     }
 
-    .doctor-info {
-        font-size: 6pt !important;
-    }
-
-    /* Forzar ajuste de elementos grandes */
-    .item, .pregunta {
-        margin-bottom: 1px !important;
-        padding: 1px !important;
-    }
-
-    /* Ocultar elementos opcionales para ahorrar espacio */
-    .sub-options {
-        font-size: 6pt !important;
-        margin-top: 1px !important;
+    /* Asegurar que los valores ingresados sean visibles */
+    input:not([type="radio"]):not([type="checkbox"]),
+    select,
+    textarea {
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 }
 
@@ -484,4 +642,104 @@ input:focus, textarea:focus, select:focus {
 /* Scroll suave */
 html {
     scroll-behavior: smooth;
+}
+
+/* Estilos específicos para formulario de evoluciones */
+.print-only {
+    display: none;
+}
+
+.signature-section {
+    margin-top: 3rem;
+    padding: 2rem 0;
+    border-top: 2px solid #dee2e6;
+}
+
+.signature-section img {
+    max-width: 300px;
+    height: auto;
+}
+
+.signature-section p {
+    margin: 0.5rem 0;
+}
+
+.button-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 1.5rem 0;
+    margin-bottom: 1rem;
+}
+
+.button-group .btn {
+    min-width: 150px;
+}
+
+/* Botones de control de voz */
+.voice-controls {
+    display: inline-flex;
+    gap: 0.5rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+.voice-controls .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Mejoras visuales para evoluciones */
+.form-section h2 {
+    color: #0066cc;
+    border-bottom: 2px solid #0066cc;
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Estilos para el slider de ansiedad */
+input[type="range"] {
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: linear-gradient(to right, #28a745 0%, #ffc107 50%, #dc3545 100%);
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #0066cc;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #0066cc;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border: none;
+}
+
+/* Checkboxes con mejor estilo */
+.form-check-input:checked {
+    background-color: #0066cc;
+    border-color: #0066cc;
+}
+
+/* Cards para secciones en evoluciones */
+.form-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
 }

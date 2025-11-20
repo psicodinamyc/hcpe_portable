@@ -18,16 +18,30 @@ document.addEventListener('DOMContentLoaded', function() {
     inicializarReconocimientoVoz();
     inicializarSintesisVoz();
     
+    // Inicializar textareas con auto-ajuste de altura
+    inicializarTextareas();
+    
     // Asignar IDs a botones de exportación
     asignarIDsBotones();
     
     // Auto-guardar cada 30 segundos
     setInterval(autoGuardar, 30000);
     
-    // Cargar último formulario guardado si existe
-    const cargarUltimo = localStorage.getItem('hcpe_cargar_ultimo');
-    if (cargarUltimo === 'true') {
-        cargarFormulario('autosave');
+    // Verificar si se debe cargar un paciente desde URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const dniParam = urlParams.get('dni');
+    
+    if (dniParam) {
+        // Cargar paciente desde URL
+        setTimeout(() => {
+            cargarFormulario(dniParam);
+        }, 500);
+    } else {
+        // Cargar último formulario guardado si existe
+        const cargarUltimo = localStorage.getItem('hcpe_cargar_ultimo');
+        if (cargarUltimo === 'true') {
+            cargarFormulario('autosave');
+        }
     }
     
     console.log('✓ Sistema inicializado correctamente');
@@ -371,6 +385,14 @@ function exportarAWord() {
             }
         }
         
+        // Función para obtener valores de select múltiple
+        function obtenerSelectMultiple(selectId) {
+            const select = document.getElementById(selectId);
+            if (!select) return '';
+            const opciones = Array.from(select.selectedOptions).map(opt => opt.text);
+            return opciones.length > 0 ? opciones.join(', ') : '';
+        }
+        
         // Función para obtener radio button seleccionado
         function obtenerRadio(name) {
             const radio = document.querySelector(`input[name="${name}"]:checked`);
@@ -525,13 +547,8 @@ function exportarAWord() {
             cirugiasPrevias: obtenerValor('cirugiasPrevias'),
             alergiasSelect: obtenerSelectText('#alergiasSelect'),
             alergias: obtenerValor('alergias'),
-            consumoSustancias: obtenerSelectText('#consumoSustancias'),
-            alcoholSelect: obtenerSelectText('#alcoholSelect'),
-            opiaceosSelect: obtenerSelectText('#opiaceosSelect'),
-            marihuanaSelect: obtenerSelectText('#marihuanaSelect'),
-            cocainaSelect: obtenerSelectText('#cocainaSelect'),
-            sinteticasSelect: obtenerSelectText('#sinteticasSelect'),
-            drogasilicitas: obtenerValor('drogasilicitas'),
+            consumoSustancias: obtenerCheckboxes(['consumoAlcohol', 'consumoOpiaceos', 'consumoMarihuana', 'consumoCocaina', 'consumoSinteticas', 'consumoNinguno']),
+            consumoSustanciasObservacion: obtenerValor('consumoSustanciasObservacion'),
             antecedentesGineco: obtenerValor('antecedentesGineco'),
             
             // Sección 6: Antecedentes Familiares
@@ -569,50 +586,80 @@ function exportarAWord() {
             observacionContenidoPensamiento: obtenerValor('observacionContenidoPensamiento'),
             alucinaciones: obtenerSelectText('#alucinaciones'),
             observacionAlucinaciones: obtenerValor('observacionAlucinaciones'),
-            pseudoalucinaciones: obtenerRadio('pseudoalucinaciones'),
+            pseudoalucinaciones: obtenerSelectText('#pseudoalucinaciones'),
             observacionPseudoalucinaciones: obtenerValor('observacionPseudoalucinaciones'),
-            ilusiones: obtenerRadio('ilusiones'),
+            ilusiones: obtenerSelectText('#ilusiones'),
             observacionIlusiones: obtenerValor('observacionIlusiones'),
-            despersonalizacion: obtenerRadio('despersonalizacion'),
+            despersonalizacion: obtenerSelectText('#despersonalizacion'),
             observacionDespersonalizacion: obtenerValor('observacionDespersonalizacion'),
-            desrealizacion: obtenerRadio('desrealizacion'),
+            desrealizacion: obtenerSelectText('#desrealizacion'),
             observacionDesrealizacion: obtenerValor('observacionDesrealizacion'),
-            orientacionTiempo: obtenerRadio('orientacion_tiempo'),
+            orientacionTiempo: obtenerSelectText('#orientacion_tiempo'),
             observacionOrientacionTiempo: obtenerValor('observacionOrientacionTiempo'),
-            orientacionEspacio: obtenerRadio('orientacion_espacio'),
+            orientacionEspacio: obtenerSelectText('#orientacion_espacio'),
             observacionOrientacionEspacio: obtenerValor('observacionOrientacionEspacio'),
-            orientacionPersonal: obtenerRadio('orientacion_personal'),
+            orientacionPersonal: obtenerSelectText('#orientacion_personal'),
             observacionOrientacionPersonal: obtenerValor('observacionOrientacionPersonal'),
-            orientacionSocial: obtenerRadio('orientacion_social'),
+            orientacionSocial: obtenerSelectText('#orientacion_social'),
             observacionOrientacionSocial: obtenerValor('observacionOrientacionSocial'),
-            atencion: obtenerRadio('atencion'),
+            atencion: obtenerSelectText('#atencion'),
             observacionAtencion: obtenerValor('observacionAtencion'),
-            concentracion: obtenerRadio('concentracion'),
+            concentracion: obtenerSelectText('#concentracion'),
             observacionConcentracion: obtenerValor('observacionConcentracion'),
-            memoriaInmediata: obtenerRadio('memoria_inmediata'),
+            memoriaInmediata: obtenerSelectText('#memoria_inmediata'),
             observacionMemoriaInmediata: obtenerValor('observacionMemoriaInmediata'),
-            memoriaReciente: obtenerRadio('memoria_reciente'),
+            memoriaReciente: obtenerSelectText('#memoria_reciente'),
             observacionMemoriaReciente: obtenerValor('observacionMemoriaReciente'),
-            memoriaRemota: obtenerRadio('memoria_remota'),
+            memoriaRemota: obtenerSelectText('#memoria_remota'),
             observacionMemoriaRemota: obtenerValor('observacionMemoriaRemota'),
-            iniciativa: obtenerRadio('iniciativa'),
+            iniciativa: obtenerSelectText('#iniciativa'),
             observacionIniciativa: obtenerValor('observacionIniciativa'),
-            perseverancia: obtenerRadio('perseverancia'),
+            perseverancia: obtenerSelectText('#perseverancia'),
             observacionPerseverancia: obtenerValor('observacionPerseverancia'),
-            interes: obtenerRadio('interes'),
+            interes: obtenerSelectText('#interes'),
             observacionInteres: obtenerValor('observacionInteres'),
-            actividadMotora: obtenerRadio('actividad_motora'),
+            actividadMotora: obtenerSelectText('#actividad_motora'),
             observacionActividadMotora: obtenerValor('observacionActividadMotora'),
-            postura: obtenerRadio('postura'),
+            postura: obtenerSelectText('#postura'),
             observacionPostura: obtenerValor('observacionPostura'),
             movimientosInvoluntarios: obtenerSelectText('#movimientosInvoluntarios'),
             observacionMovimientos: obtenerValor('observacionMovimientos'),
-            juicio: obtenerRadio('juicio'),
+            juicio: obtenerSelectText('#juicio'),
             observacionJuicio: obtenerValor('observacionJuicio'),
-            tiposJuicio: obtenerCheckboxes('tipos_juicio'),
+            tiposJuicio: obtenerSelectText('#tiposJuicio'),
             observacionTiposJuicio: obtenerValor('observacionTiposJuicio'),
-            introspeccion: obtenerRadio('introspeccion'),
+            introspeccion: obtenerSelectText('#introspeccion'),
             observacionIntrospeccion: obtenerValor('observacionIntrospeccion'),
+            estadoConciencia: obtenerSelectText('#estadoConciencia'),
+            observacionConciencia: obtenerValor('observacionConciencia'),
+            claridadConciencia: obtenerSelectText('#claridadConciencia'),
+            observacionClaridadConciencia: obtenerValor('observacionClaridadConciencia'),
+            fluenciaVerbal: obtenerSelectText('#fluenciaVerbal'),
+            observacionFluenciaVerbal: obtenerValor('observacionFluenciaVerbal'),
+            prosodia: obtenerSelectText('#prosodia'),
+            observacionProsodia: obtenerValor('observacionProsodia'),
+            comprensionVerbal: obtenerSelectText('#comprensionVerbal'),
+            observacionComprension: obtenerValor('observacionComprension'),
+            alteracionesLenguaje: obtenerSelectText('#alteracionesLenguaje'),
+            observacionAlteracionesLenguaje: obtenerValor('observacionAlteracionesLenguaje'),
+            inteligenciaClinica: obtenerSelectText('#inteligenciaClinica'),
+            observacionInteligencia: obtenerValor('observacionInteligencia'),
+            funcionamientoCognitivo: obtenerSelectText('#funcionamientoCognitivo'),
+            observacionFuncionamiento: obtenerValor('observacionFuncionamiento'),
+            patronSueno: obtenerSelectText('#patronSueno'),
+            observacionSueno: obtenerValor('observacionSueno'),
+            apetito: obtenerSelectText('#apetito'),
+            observacionApetito: obtenerValor('observacionApetito'),
+            ritmoCircadiano: obtenerSelectText('#ritmoCircadiano'),
+            observacionRitmo: obtenerValor('observacionRitmo'),
+            heteroagresividad: obtenerSelectText('#heteroagresividad'),
+            observacionHeteroagresividad: obtenerValor('observacionHeteroagresividad'),
+            autoagresividad: obtenerSelectText('#autoagresividad'),
+            observacionAutoagresividad: obtenerValor('observacionAutoagresividad'),
+            impulsividad: obtenerSelectText('#impulsividad'),
+            observacionImpulsividad: obtenerValor('observacionImpulsividad'),
+            conductasRiesgo: obtenerSelectText('#conductasRiesgo'),
+            observacionConductasRiesgo: obtenerValor('observacionConductasRiesgo'),
             
             // Sección 9: Diagnóstico Multiaxial
             codigoCIE10Eje1: obtenerValor('codigoCIE10Eje1'),
@@ -630,11 +677,12 @@ function exportarAWord() {
             // Sección 10: Plan de Tratamiento
             planTratamiento: obtenerValor('planTratamiento'),
             tiposTratamiento: obtenerCheckboxes(['psicofarmacos', 'psicoterapia', 'otrosTratamiento']),
-            frecuenciaSeguimiento: obtenerCheckboxes(['frecuenciaSemanal', 'frecuenciaQuincenal', 'frecuenciaMensual', 'frecuenciaOtros']),
+            frecuenciaSeguimiento: obtenerSelectText('#frecuenciaSeguimientoSelect'),
+            frecuenciaSeguimientoObs: obtenerValor('frecuenciaSeguimiento'),
             evolucion: obtenerValor('evolucion'),
-            pronostico: obtenerRadio('pronostico'),
+            pronostico: obtenerSelectText('#pronostico'),
             pronosticoObservacion: obtenerValor('pronosticoObservacion'),
-            reevaluacion: obtenerRadio('reevaluacion'),
+            reevaluacion: obtenerSelectText('#reevaluacion'),
             reevaluacionObservacion: obtenerValor('reevaluacionObservacion'),
             fechaProximaConsulta: obtenerValor('fechaProximaConsulta'),
             proximaConsultaObservacion: obtenerValor('proximaConsultaObservacion')
@@ -648,39 +696,40 @@ function exportarAWord() {
     <title>Historia Clínica Psiquiátrica</title>
     <style>
         @page { size: A4; margin: 15mm; }
-        body { font-family: Arial, Calibri, sans-serif; font-size: 8pt; line-height: 1.05; margin: 0; padding: 0; }
-        h1 { font-size: 11pt; font-weight: bold; text-align: center; margin: 0 0 3pt 0; color: #000; }
-        h2 { font-size: 9.5pt; font-weight: bold; color: #000; margin: 4pt 0 2pt 0; border-bottom: 1pt solid #000; padding-bottom: 1pt; }
-        h3 { font-size: 8.5pt; font-weight: bold; color: #000; margin: 3pt 0 1pt 0; }
+        body { font-family: 'Times New Roman', Arial, sans-serif; font-size: 9pt; line-height: 1.3; margin: 0; padding: 0; color: #000; }
+        h1 { font-size: 14pt; font-weight: bold; text-align: center; margin: 0 0 5pt 0; color: #000; text-transform: uppercase; }
+        h2 { font-size: 11pt; font-weight: bold; color: #000; margin: 8pt 0 4pt 0; border-bottom: 1.5pt solid #000; padding-bottom: 2pt; text-transform: uppercase; }
+        h3 { font-size: 10pt; font-weight: bold; color: #000; margin: 5pt 0 2pt 0; text-decoration: underline; }
         p { margin: 1pt 0; line-height: 1.05; }
-        .header { text-align: center; margin-bottom: 4pt; padding-bottom: 2pt; border-bottom: 1pt solid #000; }
-        .doctor-info { font-size: 7pt; margin-top: 1pt; line-height: 1; }
-        .datos-grid { display: table; width: 100%; margin: 2pt 0; }
+        .header { text-align: center; margin-bottom: 8pt; padding: 5pt 0; background-color: #f0f0f0; border: 1pt solid #000; }
+        .doctor-info { font-size: 8pt; margin-top: 3pt; line-height: 1.2; color: #333; }
+        .datos-grid { display: table; width: 100%; margin: 4pt 0; border: 1pt solid #ccc; }
         .datos-row { display: table-row; }
-        .datos-cell { display: table-cell; width: 20%; padding: 0.5pt 1pt; vertical-align: top; font-size: 7pt; }
-        .datos-table { width: 100%; border-collapse: collapse; margin: 2pt 0; font-size: 7pt; }
-        .dato-cell { padding: 1pt 3pt; border: none; vertical-align: top; width: 33.33%; }
-        .campos-table { width: 100%; border-collapse: collapse; margin: 2pt 0; font-size: 7pt; }
-        .campo-label { font-weight: bold; padding: 1pt 3pt; width: 30%; vertical-align: top; }
-        .campo-valor { padding: 1pt 3pt; vertical-align: top; }
-        .field { margin: 1pt 0; }
-        .field-inline { display: inline-block; margin-right: 4pt; }
-        .label { font-weight: bold; font-size: 7pt; }
-        .value { font-size: 7pt; margin-left: 2pt; }
-        .text-block { margin: 2pt 0; padding: 2pt; background-color: #f9f9f9; }
-        .text-block .label { display: block; font-weight: bold; margin-bottom: 1pt; }
-        .text-block .value { display: block; }
-        .signature { margin-top: 10pt; text-align: center; page-break-inside: avoid; }
-        .signature-line { border-top: 1px solid black; width: 200pt; margin: 8pt auto 3pt; }
-        .footer-info { text-align: center; margin-top: 8pt; font-size: 7pt; font-style: italic; color: #666; }
+        .datos-cell { display: table-cell; width: 20%; padding: 3pt 4pt; vertical-align: top; font-size: 8.5pt; border: 0.5pt solid #ddd; }
+        .datos-table { width: 100%; border-collapse: collapse; margin: 4pt 0; font-size: 8.5pt; border: 1pt solid #ccc; }
+        .dato-cell { padding: 3pt 5pt; border: 0.5pt solid #ddd; vertical-align: top; width: 33.33%; }
+        .campos-table { width: 100%; border-collapse: collapse; margin: 3pt 0; font-size: 8.5pt; border: 1pt solid #ccc; }
+        .campo-label { font-weight: bold; padding: 3pt 5pt; width: 35%; vertical-align: top; background-color: #f5f5f5; border: 0.5pt solid #ddd; }
+        .campo-valor { padding: 3pt 5pt; vertical-align: top; border: 0.5pt solid #ddd; }
+        .field { margin: 2pt 0; }
+        .field-inline { display: inline-block; margin-right: 6pt; }
+        .label { font-weight: bold; font-size: 8.5pt; color: #333; }
+        .value { font-size: 8.5pt; margin-left: 3pt; }
+        .text-block { margin: 3pt 0; padding: 4pt 6pt; background-color: #f9f9f9; border-left: 2pt solid #0066cc; }
+        .text-block .label { display: block; font-weight: bold; margin-bottom: 2pt; color: #0066cc; font-size: 9pt; }
+        .text-block .value { display: block; text-align: justify; line-height: 1.4; }
+        .signature { margin-top: 15pt; text-align: center; page-break-inside: avoid; padding-top: 10pt; border-top: 1pt solid #ccc; }
+        .signature img { max-width: 200pt; margin: 5pt auto; }
+        .signature p { margin: 2pt 0; font-size: 9pt; }
+        .footer-info { text-align: center; margin-top: 10pt; padding-top: 5pt; border-top: 0.5pt solid #ddd; font-size: 7.5pt; font-style: italic; color: #666; }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>HCPE - Historia Clínica Psiquiátrica</h1>
         <div class="doctor-info">
-            <p><strong>Dr. Mauricio Villamandos - Médico Especialista en Psiquiatría - M.P.: 07489</strong></p>
-            <p>Santa Ana, Corrientes – Argentina | infopsicodinamyc@gmail.com | Tel: 3765 041832</p>
+            <p><strong>Dr. Mauricio Villamandos - Médico Especialista en Psiquiatría - M.N.: 134131</strong></p>
+            <p>Resistencia, Chaco – Argentina | infopsicodinamyc@gmail.com | Teléfono: 3765 041832</p>
         </div>
     </div>`;
         
@@ -750,12 +799,7 @@ function exportarAWord() {
             agregarCampo('Cirugías', datos.cirugias === 'Sí' ? datos.cirugiasPrevias : datos.cirugias, true),
             agregarCampo('Alergias', datos.alergiasSelect === 'Sí' ? datos.alergias : datos.alergiasSelect, true),
             agregarCampo('Consumo de sustancias', datos.consumoSustancias),
-            datos.consumoSustancias === 'Sí' ? agregarCampo('Alcohol', datos.alcoholSelect) : '',
-            datos.consumoSustancias === 'Sí' ? agregarCampo('Opioides', datos.opiaceosSelect) : '',
-            datos.consumoSustancias === 'Sí' ? agregarCampo('Marihuana', datos.marihuanaSelect) : '',
-            datos.consumoSustancias === 'Sí' ? agregarCampo('Cocaína', datos.cocainaSelect) : '',
-            datos.consumoSustancias === 'Sí' ? agregarCampo('Sintéticas', datos.sinteticasSelect) : '',
-            datos.consumoSustancias === 'Sí' ? agregarCampo('Otras drogas', datos.drogasilicitas, true) : '',
+            datos.consumoSustanciasObservacion ? agregarCampo('Observaciones sobre consumo', datos.consumoSustanciasObservacion, true) : '',
             agregarCampo('Ginecoobstétricos', datos.antecedentesGineco, true)
         ].filter(Boolean).join('');
 
@@ -889,6 +933,61 @@ function exportarAWord() {
             htmlContent += crearTablaCampos(camposJuicio);
         }
         
+        // Conciencia
+        if (datos.estadoConciencia || datos.observacionConciencia || datos.claridadConciencia || datos.observacionClaridadConciencia) {
+            htmlContent += '<h3>Conciencia</h3>';
+            const camposConciencia = [
+                {label: 'Estado de conciencia', valor: combinarValorSelectObservacion(datos.estadoConciencia, datos.observacionConciencia)},
+                {label: 'Claridad de conciencia', valor: combinarValorSelectObservacion(datos.claridadConciencia, datos.observacionClaridadConciencia)}
+            ];
+            htmlContent += crearTablaCampos(camposConciencia);
+        }
+        
+        // Lenguaje y comunicación
+        if (datos.fluenciaVerbal || datos.observacionFluenciaVerbal || datos.prosodia || datos.observacionProsodia || datos.comprensionVerbal || datos.observacionComprension || datos.alteracionesLenguaje || datos.observacionAlteracionesLenguaje) {
+            htmlContent += '<h3>Lenguaje y comunicación</h3>';
+            const camposLenguaje = [
+                {label: 'Fluencia verbal', valor: combinarValorSelectObservacion(datos.fluenciaVerbal, datos.observacionFluenciaVerbal)},
+                {label: 'Prosodia', valor: combinarValorSelectObservacion(datos.prosodia, datos.observacionProsodia)},
+                {label: 'Comprensión verbal', valor: combinarValorSelectObservacion(datos.comprensionVerbal, datos.observacionComprension)},
+                {label: 'Alteraciones del lenguaje', valor: combinarValorSelectObservacion(datos.alteracionesLenguaje, datos.observacionAlteracionesLenguaje)}
+            ];
+            htmlContent += crearTablaCampos(camposLenguaje);
+        }
+        
+        // Inteligencia
+        if (datos.inteligenciaClinica || datos.observacionInteligencia || datos.funcionamientoCognitivo || datos.observacionFuncionamiento) {
+            htmlContent += '<h3>Inteligencia</h3>';
+            const camposInteligencia = [
+                {label: 'Estimación clínica', valor: combinarValorSelectObservacion(datos.inteligenciaClinica, datos.observacionInteligencia)},
+                {label: 'Funcionamiento cognitivo global', valor: combinarValorSelectObservacion(datos.funcionamientoCognitivo, datos.observacionFuncionamiento)}
+            ];
+            htmlContent += crearTablaCampos(camposInteligencia);
+        }
+        
+        // Sueño y ritmos biológicos
+        if (datos.patronSueno || datos.observacionSueno || datos.apetito || datos.observacionApetito || datos.ritmoCircadiano || datos.observacionRitmo) {
+            htmlContent += '<h3>Sueño y ritmos biológicos</h3>';
+            const camposSueno = [
+                {label: 'Patrón de sueño', valor: combinarValorSelectObservacion(datos.patronSueno, datos.observacionSueno)},
+                {label: 'Apetito', valor: combinarValorSelectObservacion(datos.apetito, datos.observacionApetito)},
+                {label: 'Ritmo circadiano', valor: combinarValorSelectObservacion(datos.ritmoCircadiano, datos.observacionRitmo)}
+            ];
+            htmlContent += crearTablaCampos(camposSueno);
+        }
+        
+        // Impulsos y control
+        if (datos.heteroagresividad || datos.observacionHeteroagresividad || datos.autoagresividad || datos.observacionAutoagresividad || datos.impulsividad || datos.observacionImpulsividad || datos.conductasRiesgo || datos.observacionConductasRiesgo) {
+            htmlContent += '<h3>Impulsos y control</h3>';
+            const camposImpulsos = [
+                {label: 'Heteroagresividad', valor: combinarValorSelectObservacion(datos.heteroagresividad, datos.observacionHeteroagresividad)},
+                {label: 'Autoagresividad', valor: combinarValorSelectObservacion(datos.autoagresividad, datos.observacionAutoagresividad)},
+                {label: 'Impulsividad', valor: combinarValorSelectObservacion(datos.impulsividad, datos.observacionImpulsividad)},
+                {label: 'Conductas de riesgo', valor: combinarValorSelectObservacion(datos.conductasRiesgo, datos.observacionConductasRiesgo)}
+            ];
+            htmlContent += crearTablaCampos(camposImpulsos);
+        }
+        
         // Sección 9: DIAGNÓSTICO MULTIAXIAL
         htmlContent += '<h2>9. DIAGNÓSTICO MULTIAXIAL – CIE-10</h2>';
         if (datos.diagnosticoEje1 || datos.codigoCIE10Eje1) {
@@ -930,10 +1029,9 @@ function exportarAWord() {
         // Sección 10: PLAN DE TRATAMIENTO
         const seccion10Campos = [
             agregarCampo('Plan de tratamiento', datos.planTratamiento, true),
-            agregarCampo('Psicofarmacológico', datos.tiposTratamiento.includes('psicofarmacos') ? 'Sí' : 'No'),
-            agregarCampo('Psicoterapia', datos.tiposTratamiento.includes('psicoterapia') ? 'Sí' : 'No'),
-            agregarCampo('Otros tratamientos', datos.tiposTratamiento.includes('otrosTratamiento') ? 'Sí' : 'No'),
-            agregarCampo('Frecuencia de seguimiento', datos.frecuenciaSeguimiento, true)
+            agregarCampo('Tipos de tratamiento', datos.tiposTratamiento || 'No especificado'),
+            agregarCampo('Frecuencia de seguimiento', combinarValorSelectObservacion(datos.frecuenciaSeguimiento, datos.frecuenciaSeguimientoObs)),
+            agregarCampo('Evolución esperada', datos.evolucion, true)
         ].filter(Boolean).join('');
 
         if (seccion10Campos) {
@@ -956,16 +1054,16 @@ function exportarAWord() {
             htmlContent += seccion11Campos;
         }
         
-        // Firma y pie de página
+        // Firma y pie de página con imagen
         htmlContent += `
         <div class="signature">
-            <div class="signature-line"></div>
+            <img src="images/firma_digital.png" alt="Firma" style="max-width: 200pt; display: block; margin: 0 auto 5pt;">
             <p><strong>Dr. Mauricio Villamandos</strong></p>
-            <p>Psiquiatra - M.P.: 07489</p>
+            <p>Psiquiatra - M.N.: 134131</p>
         </div>
         
         <div class="footer-info">
-            <p>[HCPE] v2.0® © 2025 - Dr. Mauricio Villamandos - Santa Ana, Corrientes - Argentina</p>
+            <p>[HCPE] v2.0® © 2025 - Dr. Mauricio Villamandos - Resistencia, Chaco - Argentina</p>
         </div>
     </body>
     </html>`;
@@ -1027,13 +1125,22 @@ function imprimir() {
 // =====================================================
 function guardarFormulario(nombreGuardado = null) {
     try {
-        const nombre = nombreGuardado || prompt('Ingrese un nombre para guardar este formulario:', 'Historia_' + new Date().toISOString().split('T')[0]);
+        // Obtener DNI del paciente como identificador único
+        const dni = document.getElementById('dni')?.value?.trim();
+        const nombre = document.getElementById('nombre')?.value?.trim();
+        const apellido = document.getElementById('apellido')?.value?.trim();
         
-        if (!nombre) return;
+        if (!dni && nombreGuardado !== 'autosave') {
+            alert('⚠️ Debe ingresar el DNI del paciente antes de guardar.');
+            document.getElementById('dni')?.focus();
+            return;
+        }
         
         // Recolectar todos los datos del formulario
         const datosFormulario = {
             timestamp: new Date().toISOString(),
+            dni: dni,
+            nombreCompleto: `${apellido}, ${nombre}`,
             campos: {}
         };
         
@@ -1053,14 +1160,20 @@ function guardarFormulario(nombreGuardado = null) {
             }
         });
         
-        // Guardar en localStorage
-        localStorage.setItem('hcpe_' + nombre, JSON.stringify(datosFormulario));
+        // Guardar en localStorage con DNI como clave
+        const clave = dni ? `hcpe_${dni}` : 'hcpe_autosave';
+        localStorage.setItem(clave, JSON.stringify(datosFormulario));
         
-        if (nombreGuardado !== 'autosave' && nombreGuardado !== 'pre_impresion') {
-            alert('✓ Formulario guardado exitosamente como:\n"' + nombre + '"');
+        // Actualizar índice de pacientes
+        if (dni) {
+            actualizarIndicePacientes(dni, apellido, nombre);
         }
         
-        console.log('💾 Formulario guardado:', nombre);
+        if (nombreGuardado !== 'autosave' && nombreGuardado !== 'pre_impresion') {
+            alert(`✓ Historia clínica guardada exitosamente\n\nPaciente: ${apellido}, ${nombre}\nDNI: ${dni}`);
+        }
+        
+        console.log('💾 Historia clínica guardada - DNI:', dni);
         
     } catch (error) {
         console.error('Error al guardar formulario:', error);
@@ -1072,39 +1185,41 @@ function guardarFormulario(nombreGuardado = null) {
 
 function cargarFormulario(nombreGuardado = null) {
     try {
-        let nombre = nombreGuardado;
+        let dni = nombreGuardado;
         
-        if (!nombre) {
-            // Mostrar lista de formularios guardados
+        if (!dni) {
+            // Mostrar lista de pacientes guardados
             const guardados = obtenerFormulariosGuardados();
             
             if (guardados.length === 0) {
-                alert('No hay formularios guardados.');
+                alert('No hay historias clínicas guardadas.');
                 return;
             }
             
-            let mensaje = 'Formularios guardados:\n\n';
+            let mensaje = 'Historias clínicas guardadas:\n\n';
             guardados.forEach((item, index) => {
-                mensaje += `${index + 1}. ${item.nombre} (${item.fecha})\n`;
+                mensaje += `${index + 1}. ${item.nombre} - DNI: ${item.dni} (${item.fecha})\n`;
             });
-            mensaje += '\nIngrese el nombre del formulario a cargar:';
+            mensaje += '\nIngrese el DNI del paciente a cargar:';
             
-            nombre = prompt(mensaje);
-            if (!nombre) return;
+            const respuesta = prompt(mensaje);
+            if (!respuesta) return;
             
-            // Si ingresó un número, obtener el nombre correspondiente
-            const numero = parseInt(nombre);
+            // Si ingresó un número, obtener el DNI correspondiente
+            const numero = parseInt(respuesta);
             if (!isNaN(numero) && numero > 0 && numero <= guardados.length) {
-                nombre = guardados[numero - 1].nombre;
+                dni = guardados[numero - 1].dni;
+            } else {
+                dni = respuesta;
             }
         }
         
         // Cargar datos
-        const key = nombre.startsWith('hcpe_') ? nombre : 'hcpe_' + nombre;
+        const key = dni.startsWith('hcpe_') ? dni : `hcpe_${dni}`;
         const datos = localStorage.getItem(key);
         
         if (!datos) {
-            alert('No se encontró el formulario "' + nombre + '"');
+            alert(`No se encontró historia clínica para DNI: ${dni}`);
             return;
         }
         
@@ -1112,7 +1227,7 @@ function cargarFormulario(nombreGuardado = null) {
         
         // Confirmar carga
         if (nombreGuardado !== 'autosave') {
-            const confirmar = confirm(`¿Desea cargar el formulario "${nombre}"?\n\nGuardado el: ${new Date(datosFormulario.timestamp).toLocaleString()}\n\nEsto reemplazará los datos actuales.`);
+            const confirmar = confirm(`¿Desea cargar la historia clínica?\n\nPaciente: ${datosFormulario.nombreCompleto || dni}\nDNI: ${datosFormulario.dni}\nÚltima modificación: ${new Date(datosFormulario.timestamp).toLocaleString()}\n\nEsto reemplazará los datos actuales.`);
             if (!confirmar) return;
         }
         
@@ -1130,6 +1245,10 @@ function cargarFormulario(nombreGuardado = null) {
                     }
                 } else {
                     campo.value = valor;
+                    // Re-ajustar altura de textareas después de cargar
+                    if (campo.tagName === 'TEXTAREA') {
+                        autoAjustarTextarea(campo);
+                    }
                 }
             }
         });
@@ -1146,29 +1265,84 @@ function cargarFormulario(nombreGuardado = null) {
     }
 }
 
+function actualizarIndicePacientes(dni, apellido, nombre) {
+    try {
+        let indice = localStorage.getItem('hcpe_indice_pacientes');
+        indice = indice ? JSON.parse(indice) : {};
+        
+        indice[dni] = {
+            dni: dni,
+            apellido: apellido,
+            nombre: nombre,
+            nombreCompleto: `${apellido}, ${nombre}`,
+            ultimaModificacion: new Date().toISOString()
+        };
+        
+        localStorage.setItem('hcpe_indice_pacientes', JSON.stringify(indice));
+    } catch (error) {
+        console.error('Error al actualizar índice de pacientes:', error);
+    }
+}
+
 function obtenerFormulariosGuardados() {
     const guardados = [];
     
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.startsWith('hcpe_')) {
+        if (key && key.startsWith('hcpe_') && key !== 'hcpe_indice_pacientes' && key !== 'hcpe_autosave' && key !== 'hcpe_cargar_ultimo') {
             try {
                 const datos = JSON.parse(localStorage.getItem(key));
-                const nombre = key.replace('hcpe_', '');
+                const dni = key.replace('hcpe_', '');
                 const fecha = new Date(datos.timestamp).toLocaleString();
+                const nombreCompleto = datos.nombreCompleto || dni;
                 
-                guardados.push({ nombre, fecha, key });
+                guardados.push({ 
+                    dni: dni,
+                    nombre: nombreCompleto, 
+                    fecha: fecha, 
+                    key: key 
+                });
             } catch (error) {
-                console.error('Error al leer formulario guardado:', key);
+                console.error('Error al leer historia clínica guardada:', key);
             }
         }
     }
     
-    return guardados.sort((a, b) => b.nombre.localeCompare(a.nombre));
+    return guardados.sort((a, b) => a.nombre.localeCompare(b.nombre));
+}
+
+function buscarPacientePorDNI() {
+    const dni = document.getElementById('dni')?.value?.trim();
+    
+    if (!dni) {
+        alert('⚠️ Ingrese el DNI del paciente');
+        return;
+    }
+    
+    const key = `hcpe_${dni}`;
+    const datos = localStorage.getItem(key);
+    
+    if (datos) {
+        const confirmar = confirm(`Se encontró una historia clínica existente para este DNI.\n\n¿Desea cargarla?`);
+        if (confirmar) {
+            cargarFormulario(dni);
+        }
+    } else {
+        const crear = confirm(`No se encontró historia clínica para DNI: ${dni}\n\n¿Desea crear una nueva historia clínica para este paciente?`);
+        if (crear) {
+            // Solo mantener el DNI y limpiar el resto
+            const dniActual = document.getElementById('dni').value;
+            nuevoFormulario();
+            document.getElementById('dni').value = dniActual;
+        }
+    }
 }
 
 function autoGuardar() {
-    // Solo auto-guardar si hay algún campo con contenido
+    // Solo auto-guardar si hay DNI y algún campo con contenido
+    const dni = document.getElementById('dni')?.value?.trim();
+    if (!dni) return; // No auto-guardar sin DNI
+    
     const campos = document.querySelectorAll('input, textarea, select');
     let hayContenido = false;
     
@@ -1181,7 +1355,7 @@ function autoGuardar() {
     
     if (hayContenido) {
         guardarFormulario('autosave');
-        console.log('💾 Auto-guardado realizado');
+        console.log('💾 Auto-guardado realizado - DNI:', dni);
     }
 }
 
@@ -1300,6 +1474,29 @@ function ocultarCarga(botonId, textoOriginal) {
     }
 }
 
+function autoAjustarTextarea(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+}
+
+function inicializarTextareas() {
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach(textarea => {
+        // Ajustar altura inicial
+        autoAjustarTextarea(textarea);
+        
+        // Ajustar altura al escribir
+        textarea.addEventListener('input', function() {
+            autoAjustarTextarea(this);
+        });
+        
+        // Ajustar altura al cargar datos
+        textarea.addEventListener('change', function() {
+            autoAjustarTextarea(this);
+        });
+    });
+}
+
 function asignarIDsBotones() {
     // Asignar IDs a los botones si no los tienen
     const botonesNav = document.querySelectorAll('.navbar button, .navbar a.btn');
@@ -1384,6 +1581,85 @@ window.addEventListener('beforeunload', function(e) {
         return e.returnValue;
     }
 });
+
+// =====================================================
+// BACKUP Y RESTORE DEL SISTEMA COMPLETO
+// =====================================================
+function exportarBackupDesdeHCPE() {
+    try {
+        const backup = {
+            version: '2.0',
+            fecha: new Date().toISOString(),
+            datos: {}
+        };
+        
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && (key.startsWith('hcpe_') || key.startsWith('evol_'))) {
+                backup.datos[key] = localStorage.getItem(key);
+            }
+        }
+        
+        const totalHistorias = Object.keys(backup.datos).filter(k => k.startsWith('hcpe_') && k !== 'hcpe_indice_pacientes' && k !== 'hcpe_autosave' && k !== 'hcpe_cargar_ultimo').length;
+        const totalEvoluciones = Object.keys(backup.datos).filter(k => k.startsWith('evol_')).length;
+        
+        const json = JSON.stringify(backup, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `HCPE_Backup_${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+        
+        URL.revokeObjectURL(url);
+        
+        alert(`✓ Backup exportado exitosamente\n\n📊 Contenido:\n- ${totalHistorias} historias clínicas\n- ${totalEvoluciones} evoluciones`);
+        
+    } catch (error) {
+        console.error('Error al exportar backup:', error);
+        alert('❌ Error al exportar backup.');
+    }
+}
+
+function importarBackupDesdeHCPE(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const confirmar = confirm(`⚠️ ¿Importar backup?\n\nEsto puede sobrescribir pacientes existentes.\n\n¿Continuar?`);
+    if (!confirmar) {
+        event.target.value = '';
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const backup = JSON.parse(e.target.result);
+            
+            if (!backup.version || !backup.datos) {
+                throw new Error('Formato inválido');
+            }
+            
+            const totalHistorias = Object.keys(backup.datos).filter(k => k.startsWith('hcpe_') && k !== 'hcpe_indice_pacientes' && k !== 'hcpe_autosave' && k !== 'hcpe_cargar_ultimo').length;
+            const totalEvoluciones = Object.keys(backup.datos).filter(k => k.startsWith('evol_')).length;
+            
+            for (const key in backup.datos) {
+                localStorage.setItem(key, backup.datos[key]);
+            }
+            
+            alert(`✓ Backup importado\n\n- ${totalHistorias} historias clínicas\n- ${totalEvoluciones} evoluciones\n\nRecargue la página.`);
+            
+        } catch (error) {
+            console.error('Error al importar:', error);
+            alert('❌ Error al importar backup.');
+        }
+        
+        event.target.value = '';
+    };
+    
+    reader.readAsText(file);
+}
 
 console.log('✅ Sistema HCPE completamente inicializado');
 console.log('📌 Atajos de teclado disponibles:');

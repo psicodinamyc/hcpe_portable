@@ -350,7 +350,8 @@ function guardarEvolucion() {
             temblor: document.getElementById('ea_temblor').checked,
             otros: document.getElementById('ea_otros').checked
         },
-        tratamientoActual: document.getElementById('tratamientoActual').value,
+        // Tratamiento farmacológico (tabla estructurada)
+        medicamentos: [],
         ajustesTratamiento: document.getElementById('ajustesTratamiento').value,
         
         // Sección 5: Plan
@@ -359,6 +360,20 @@ function guardarEvolucion() {
         indicaciones: document.getElementById('indicaciones').value,
         observacionesAdicionales: document.getElementById('observacionesAdicionales').value
     };
+    
+    // Recoger medicamentos de la tabla
+    for (let i = 1; i <= 5; i++) {
+        const med = document.getElementById(`med${i}`)?.value;
+        if (med && med.trim()) {
+            evolucion.medicamentos.push({
+                nombre: med,
+                manana: document.getElementById(`med${i}_manana`)?.value || '',
+                tarde: document.getElementById(`med${i}_tarde`)?.value || '',
+                noche: document.getElementById(`med${i}_noche`)?.value || '',
+                refuerzo: document.getElementById(`med${i}_refuerzo`)?.value || ''
+            });
+        }
+    }
     
     // Guardar en localStorage
     const clave = `evol_${dni}_${timestamp}`;
@@ -491,7 +506,20 @@ function cargarEvolucion(key) {
             if (checkbox) checkbox.checked = datos.efectosAdversos[efecto];
         });
         
-        document.getElementById('tratamientoActual').value = datos.tratamientoActual || '';
+        // Cargar medicamentos de la tabla
+        if (datos.medicamentos && Array.isArray(datos.medicamentos)) {
+            datos.medicamentos.forEach((med, index) => {
+                const i = index + 1;
+                if (i <= 5) {
+                    document.getElementById(`med${i}`).value = med.nombre || '';
+                    document.getElementById(`med${i}_manana`).value = med.manana || '';
+                    document.getElementById(`med${i}_tarde`).value = med.tarde || '';
+                    document.getElementById(`med${i}_noche`).value = med.noche || '';
+                    document.getElementById(`med${i}_refuerzo`).value = med.refuerzo || '';
+                }
+            });
+        }
+        
         document.getElementById('ajustesTratamiento').value = datos.ajustesTratamiento || '';
         
         document.getElementById('proximaCita').value = datos.proximaCita || '';
@@ -524,6 +552,92 @@ function eliminarEvolucion(key) {
         alert('✓ Evolución eliminada');
         verHistorialEvoluciones(); // Recargar listado
     }
+}
+
+// =====================================================
+// FUNCIONES AUXILIARES PARA EXPORTACIÓN
+// =====================================================
+function generarTablaMedicamentosWord() {
+    let tabla = '<table style="width: 100%; border-collapse: collapse; margin-top: 5px;">';
+    tabla += '<tr style="background-color: #28a745; color: white;">';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Medicamento</th>';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Mañana</th>';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Tarde</th>';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Noche</th>';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Refuerzo</th>';
+    tabla += '</tr>';
+    
+    let hayMedicamentos = false;
+    for (let i = 1; i <= 5; i++) {
+        const med = document.getElementById(`med${i}`)?.value;
+        if (med && med.trim()) {
+            hayMedicamentos = true;
+            tabla += '<tr>';
+            tabla += `<td style="border: 1px solid #000; padding: 4px;">${med}</td>`;
+            tabla += `<td style="border: 1px solid #000; padding: 4px;">${document.getElementById(`med${i}_manana`)?.value || '-'}</td>`;
+            tabla += `<td style="border: 1px solid #000; padding: 4px;">${document.getElementById(`med${i}_tarde`)?.value || '-'}</td>`;
+            tabla += `<td style="border: 1px solid #000; padding: 4px;">${document.getElementById(`med${i}_noche`)?.value || '-'}</td>`;
+            tabla += `<td style="border: 1px solid #000; padding: 4px;">${document.getElementById(`med${i}_refuerzo`)?.value || '-'}</td>`;
+            tabla += '</tr>';
+        }
+    }
+    
+    tabla += '</table>';
+    return hayMedicamentos ? tabla : 'No registrado';
+}
+
+function generarTablaMedicamentosHistorial(medicamentos) {
+    if (!medicamentos || medicamentos.length === 0) return 'No registrado';
+    
+    let tabla = '<table style="width: 100%; border-collapse: collapse; margin-top: 5px;">';
+    tabla += '<tr style="background-color: #28a745; color: white;">';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Medicamento</th>';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Mañana</th>';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Tarde</th>';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Noche</th>';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Refuerzo</th>';
+    tabla += '</tr>';
+    
+    medicamentos.forEach(med => {
+        tabla += '<tr>';
+        tabla += `<td style="border: 1px solid #000; padding: 4px;">${med.nombre}</td>`;
+        tabla += `<td style="border: 1px solid #000; padding: 4px;">${med.manana || '-'}</td>`;
+        tabla += `<td style="border: 1px solid #000; padding: 4px;">${med.tarde || '-'}</td>`;
+        tabla += `<td style="border: 1px solid #000; padding: 4px;">${med.noche || '-'}</td>`;
+        tabla += `<td style="border: 1px solid #000; padding: 4px;">${med.refuerzo || '-'}</td>`;
+        tabla += '</tr>';
+    });
+    
+    tabla += '</table>';
+    return tabla;
+}
+
+function generarTablaMedicamentosHistorial(medicamentos) {
+    if (!medicamentos || medicamentos.length === 0) {
+        return 'No registrado';
+    }
+    
+    let tabla = '<table style="width: 100%; border-collapse: collapse; margin-top: 5px;">';
+    tabla += '<tr style="background-color: #28a745; color: white;">';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Medicamento</th>';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Mañana</th>';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Tarde</th>';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Noche</th>';
+    tabla += '<th style="border: 1px solid #000; padding: 5px;">Refuerzo</th>';
+    tabla += '</tr>';
+    
+    medicamentos.forEach(med => {
+        tabla += '<tr>';
+        tabla += `<td style="border: 1px solid #000; padding: 4px;">${med.nombre || ''}</td>`;
+        tabla += `<td style="border: 1px solid #000; padding: 4px;">${med.manana || '-'}</td>`;
+        tabla += `<td style="border: 1px solid #000; padding: 4px;">${med.tarde || '-'}</td>`;
+        tabla += `<td style="border: 1px solid #000; padding: 4px;">${med.noche || '-'}</td>`;
+        tabla += `<td style="border: 1px solid #000; padding: 4px;">${med.refuerzo || '-'}</td>`;
+        tabla += '</tr>';
+    });
+    
+    tabla += '</table>';
+    return tabla;
 }
 
 // =====================================================
@@ -646,8 +760,8 @@ function exportarEvolucionWord() {
                 </div>
             </div>
             <div class="campo">
-                <span class="label">Tratamiento actual:</span><br>
-                ${document.getElementById('tratamientoActual').value || 'No registrado'}
+                <span class="label">Tratamiento farmacológico actual:</span><br>
+                ${generarTablaMedicamentosWord()}
             </div>
             <div class="campo">
                 <span class="label">Ajustes realizados:</span><br>
@@ -764,7 +878,7 @@ function exportarTodasEvoluciones(dni) {
                 <div class="campo"><span class="label">Adherencia:</span> ${evol.adherencia || 'No registrado'}</div>
                 <div class="campo"><span class="label">Respuesta:</span> ${evol.respuestaTratamiento || 'No registrado'}</div>
                 <div class="campo"><span class="label">Efectos adversos:</span> ${efectosAdversos}</div>
-                <div class="campo"><span class="label">Tratamiento:</span> ${evol.tratamientoActual || 'No registrado'}</div>
+                <div class="campo"><span class="label">Tratamiento farmacológico:</span><br>${generarTablaMedicamentosHistorial(evol.medicamentos)}</div>
                 <div class="campo"><span class="label">Ajustes:</span> ${evol.ajustesTratamiento || 'No'}</div>
                 
                 <div class="campo"><span class="label">Próxima cita:</span> ${evol.proximaCita || 'No registrado'}</div>
@@ -805,6 +919,15 @@ function nuevaEvolucion() {
         
         // Limpiar formulario
         document.getElementById('evolucionForm').reset();
+        
+        // Limpiar tabla de medicamentos
+        for (let i = 1; i <= 5; i++) {
+            document.getElementById(`med${i}`).value = '';
+            document.getElementById(`med${i}_manana`).value = '';
+            document.getElementById(`med${i}_tarde`).value = '';
+            document.getElementById(`med${i}_noche`).value = '';
+            document.getElementById(`med${i}_refuerzo`).value = '';
+        }
         
         // Restaurar datos del paciente
         document.getElementById('dniPaciente').value = dni;

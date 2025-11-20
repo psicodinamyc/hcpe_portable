@@ -677,6 +677,34 @@ function exportarAWord() {
             // Sección 10: Plan de Tratamiento
             planTratamiento: obtenerValor('planTratamiento'),
             tiposTratamiento: obtenerCheckboxes(['psicofarmacos', 'psicoterapia', 'otrosTratamiento']),
+            // Medicamentos (tabla estructurada)
+            med1: obtenerValor('med1'),
+            med1_manana: obtenerValor('med1_manana'),
+            med1_tarde: obtenerValor('med1_tarde'),
+            med1_noche: obtenerValor('med1_noche'),
+            med1_refuerzo: obtenerValor('med1_refuerzo'),
+            med2: obtenerValor('med2'),
+            med2_manana: obtenerValor('med2_manana'),
+            med2_tarde: obtenerValor('med2_tarde'),
+            med2_noche: obtenerValor('med2_noche'),
+            med2_refuerzo: obtenerValor('med2_refuerzo'),
+            med3: obtenerValor('med3'),
+            med3_manana: obtenerValor('med3_manana'),
+            med3_tarde: obtenerValor('med3_tarde'),
+            med3_noche: obtenerValor('med3_noche'),
+            med3_refuerzo: obtenerValor('med3_refuerzo'),
+            med4: obtenerValor('med4'),
+            med4_manana: obtenerValor('med4_manana'),
+            med4_tarde: obtenerValor('med4_tarde'),
+            med4_noche: obtenerValor('med4_noche'),
+            med4_refuerzo: obtenerValor('med4_refuerzo'),
+            med5: obtenerValor('med5'),
+            med5_manana: obtenerValor('med5_manana'),
+            med5_tarde: obtenerValor('med5_tarde'),
+            med5_noche: obtenerValor('med5_noche'),
+            med5_refuerzo: obtenerValor('med5_refuerzo'),
+            observacionesTratamiento: obtenerValor('observacionesTratamiento'),
+            indicacionesGenerales: obtenerValor('indicacionesGenerales'),
             frecuenciaSeguimiento: obtenerSelectText('#frecuenciaSeguimientoSelect'),
             frecuenciaSeguimientoObs: obtenerValor('frecuenciaSeguimiento'),
             evolucion: obtenerValor('evolucion'),
@@ -1027,16 +1055,52 @@ function exportarAWord() {
         }
         
         // Sección 10: PLAN DE TRATAMIENTO
-        const seccion10Campos = [
-            agregarCampo('Plan de tratamiento', datos.planTratamiento, true),
-            agregarCampo('Tipos de tratamiento', datos.tiposTratamiento || 'No especificado'),
-            agregarCampo('Frecuencia de seguimiento', combinarValorSelectObservacion(datos.frecuenciaSeguimiento, datos.frecuenciaSeguimientoObs)),
-            agregarCampo('Evolución esperada', datos.evolucion, true)
-        ].filter(Boolean).join('');
-
-        if (seccion10Campos) {
-            htmlContent += '<h2>10. PLAN DE TRATAMIENTO</h2>';
-            htmlContent += seccion10Campos;
+        htmlContent += '<h2>10. PLAN DE TRATAMIENTO</h2>';
+        
+        if (datos.tiposTratamiento) {
+            htmlContent += agregarCampo('Tipos de tratamiento', datos.tiposTratamiento);
+        }
+        
+        // Generar tabla de medicamentos
+        let tablaMeds = '<table style="width: 100%; border-collapse: collapse; margin: 5pt 0; font-size: 8pt;">';
+        tablaMeds += '<tr style="background-color: #0066cc; color: white;">';
+        tablaMeds += '<th style="border: 0.5pt solid #000; padding: 3pt;">Medicamento</th>';
+        tablaMeds += '<th style="border: 0.5pt solid #000; padding: 3pt;">Mañana</th>';
+        tablaMeds += '<th style="border: 0.5pt solid #000; padding: 3pt;">Tarde</th>';
+        tablaMeds += '<th style="border: 0.5pt solid #000; padding: 3pt;">Noche</th>';
+        tablaMeds += '<th style="border: 0.5pt solid #000; padding: 3pt;">Refuerzo</th>';
+        tablaMeds += '</tr>';
+        
+        let hayMedicamentos = false;
+        for (let i = 1; i <= 5; i++) {
+            const med = datos[`med${i}`];
+            if (med && med.trim()) {
+                hayMedicamentos = true;
+                tablaMeds += '<tr>';
+                tablaMeds += `<td style="border: 0.5pt solid #000; padding: 3pt;">${med}</td>`;
+                tablaMeds += `<td style="border: 0.5pt solid #000; padding: 3pt; text-align: center;">${datos[`med${i}_manana`] || '-'}</td>`;
+                tablaMeds += `<td style="border: 0.5pt solid #000; padding: 3pt; text-align: center;">${datos[`med${i}_tarde`] || '-'}</td>`;
+                tablaMeds += `<td style="border: 0.5pt solid #000; padding: 3pt; text-align: center;">${datos[`med${i}_noche`] || '-'}</td>`;
+                tablaMeds += `<td style="border: 0.5pt solid #000; padding: 3pt; text-align: center;">${datos[`med${i}_refuerzo`] || '-'}</td>`;
+                tablaMeds += '</tr>';
+            }
+        }
+        tablaMeds += '</table>';
+        
+        if (hayMedicamentos) {
+            htmlContent += '<div class="text-block"><div class="label">Plan Farmacológico:</div><div class="value">' + tablaMeds + '</div></div>';
+        }
+        
+        if (datos.observacionesTratamiento) {
+            htmlContent += agregarCampo('Observaciones del tratamiento', datos.observacionesTratamiento, true);
+        }
+        
+        if (datos.indicacionesGenerales) {
+            htmlContent += agregarCampo('Indicaciones generales', datos.indicacionesGenerales, true);
+        }
+        
+        if (datos.frecuenciaSeguimientoObs || datos.frecuenciaSeguimiento) {
+            htmlContent += agregarCampo('Frecuencia de seguimiento', combinarValorSelectObservacion(datos.frecuenciaSeguimiento, datos.frecuenciaSeguimientoObs));
         }
         
         // Sección 11: PRONÓSTICO Y PLAN DE SEGUIMIENTO

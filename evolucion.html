@@ -339,19 +339,58 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label>Tratamiento actual (medicación):</label>
-                    <div class="voice-controls">
-                        <button type="button" class="btn btn-sm btn-danger" onclick="iniciarDictado('tratamientoActual')" title="Dictar">
-                            <i class="fas fa-microphone"></i>
-                        </button>
-                        <button type="button" class="btn btn-sm btn-info" onclick="leerCampo('tratamientoActual')" title="Leer">
-                            <i class="fas fa-volume-up"></i>
-                        </button>
-                    </div>
-                    <textarea id="tratamientoActual" class="form-control" rows="3" placeholder="Liste la medicación actual con dosis..."></textarea>
+                    <label><strong>Tratamiento farmacológico actual:</strong></label>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                        <thead>
+                            <tr style="background-color: #28a745; color: white;">
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Medicamento</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Mañana</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Tarde</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Noche</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Refuerzo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med1" class="form-control form-control-sm" placeholder="Ej: Sertralina 50mg"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med1_manana" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med1_tarde" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med1_noche" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med1_refuerzo" class="form-control form-control-sm"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med2" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med2_manana" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med2_tarde" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med2_noche" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med2_refuerzo" class="form-control form-control-sm"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med3" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med3_manana" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med3_tarde" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med3_noche" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med3_refuerzo" class="form-control form-control-sm"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med4" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med4_manana" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med4_tarde" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med4_noche" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med4_refuerzo" class="form-control form-control-sm"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med5" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med5_manana" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med5_tarde" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med5_noche" class="form-control form-control-sm"></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med5_refuerzo" class="form-control form-control-sm"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mt-3">
                     <label>Ajustes de tratamiento realizados hoy:</label>
                     <div class="voice-controls">
                         <button type="button" class="btn btn-sm btn-danger" onclick="iniciarDictado('ajustesTratamiento')" title="Dictar">

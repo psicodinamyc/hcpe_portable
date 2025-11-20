@@ -97,6 +97,9 @@
                         <i class="fas fa-upload"></i> Importar Backup
                     </button>
                     <input type="file" id="importarBackupInput" accept=".json" style="display: none;" onchange="importarBackup(event)">
+                    <button class="btn btn-info btn-sm" onclick="window.open('indicaciones.html', '_blank')" title="Generar indicaciones para paciente">
+                        <i class="fas fa-prescription"></i> Indicaciones
+                    </button>
                     <button class="btn btn-primary" onclick="window.location.href='hcpe.html'">
                         <i class="fas fa-plus"></i> Nueva Historia Clínica
                     </button>
@@ -209,6 +212,9 @@
                                 <button class="btn btn-sm btn-success" onclick="abrirEvolucion('${paciente.dni}')" title="Nueva Evolución">
                                     <i class="fas fa-file-medical"></i> Evolución
                                 </button>
+                                <button class="btn btn-sm btn-warning" onclick="abrirIndicaciones('${paciente.dni}')" title="Generar Indicaciones">
+                                    <i class="fas fa-prescription"></i> Indicaciones
+                                </button>
                                 <button class="btn btn-sm btn-info" onclick="verEvoluciones('${paciente.dni}')" title="Ver Evoluciones">
                                     <i class="fas fa-history"></i> Historial
                                 </button>
@@ -280,6 +286,10 @@
 
         function abrirEvolucion(dni) {
             window.location.href = `evolucion.html?dni=${dni}`;
+        }
+
+        function abrirIndicaciones(dni) {
+            window.open(`indicaciones.html?dni=${dni}`, '_blank');
         }
 
         function verEvoluciones(dni) {

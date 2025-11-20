@@ -1807,18 +1807,93 @@
                     <label><input type="checkbox" id="psicoterapia"> Psicoterapia</label>
                     <label><input type="checkbox" id="otrosTratamiento"> Otros</label>
                 </div>
-                <textarea id="planTratamiento" class="form-control" placeholder="Observación"></textarea>
+            </div>
+
+            <div class="form-group">
+                <h4><label>10B. Plan Farmacológico:</label></h4>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                    <thead>
+                        <tr style="background-color: #007bff; color: white;">
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Medicamento</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Mañana</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Tarde</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Noche</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Refuerzo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med1" class="form-control form-control-sm" placeholder="Ej: Sertralina 50mg"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med1_manana" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med1_tarde" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med1_noche" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med1_refuerzo" class="form-control form-control-sm"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med2" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med2_manana" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med2_tarde" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med2_noche" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med2_refuerzo" class="form-control form-control-sm"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med3" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med3_manana" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med3_tarde" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med3_noche" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med3_refuerzo" class="form-control form-control-sm"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med4" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med4_manana" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med4_tarde" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med4_noche" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med4_refuerzo" class="form-control form-control-sm"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med5" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med5_manana" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med5_tarde" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med5_noche" class="form-control form-control-sm"></td>
+                            <td style="border: 1px solid #ddd; padding: 4px;"><input type="text" id="med5_refuerzo" class="form-control form-control-sm"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-group">
+                <h4><label>10C. Observaciones del tratamiento:</label></h4>
+                <textarea id="observacionesTratamiento" class="form-control" rows="3" placeholder="Observaciones sobre el plan farmacológico"></textarea>
                 <div class="voice-controls">
-                    <button onclick="iniciarDictado('planTratamiento')" class="btn btn-sm btn-outline-secondary">
+                    <button onclick="iniciarDictado('observacionesTratamiento')" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-microphone"></i> Dictar
                     </button>
-                    <button onclick="leer('planTratamiento')" class="btn btn-sm btn-outline-secondary">
+                    <button onclick="leer('observacionesTratamiento')" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-volume-up"></i> Leer
                     </button>
                 </div>
             </div>
+
             <div class="form-group">
-                <h4><label for="frecuenciaSeguimientoSelect">10B. Frecuencia de seguimiento:</label></h4>
+                <h4><label>10D. Indicaciones generales:</label></h4>
+                <textarea id="indicacionesGenerales" class="form-control" rows="5">• Tomar la medicación siempre a la misma hora cada día.
+• No suspender ni modificar las dosis sin consultar previamente.
+• Evitar el consumo de alcohol durante el tratamiento.
+• Si olvida una dosis, NO duplicar la siguiente.
+• Ante cualquier duda o efecto no deseado, comunicarse inmediatamente.
+• En caso de ser necesario, la medicación debe ser supervisada por un tercero responsable.</textarea>
+                <div class="voice-controls">
+                    <button onclick="iniciarDictado('indicacionesGenerales')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-microphone"></i> Dictar
+                    </button>
+                    <button onclick="leer('indicacionesGenerales')" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-volume-up"></i> Leer
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h4><label for="frecuenciaSeguimientoSelect">10E. Frecuencia de seguimiento:</label></h4>
                 <select id="frecuenciaSeguimientoSelect" name="frecuenciaSeguimientoSelect" class="form-control">
                     <option value="">Seleccione una opción</option>
                     <option value="semanal">Semanal</option>

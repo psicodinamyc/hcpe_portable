@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indicaciones Médicas - HCPE</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @page {
+            size: A4;
+            margin: 0.8cm;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 9pt;
+            line-height: 1.2;
+            max-width: 21cm;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 8px;
+        }
+
+        .header h1 {
+            color: #0066cc;
+            font-size: 14pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            margin: 1px 0;
+            font-size: 8pt;
+        }
+
+        .patient-info {
+            background-color: #f8f9fa;
+            padding: 8px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            border: 1px solid #dee2e6;
+        }
+
+        .patient-info table {
+            width: 100%;
+            margin: 0;
+        }
+
+        .patient-info td {
+            padding: 2px 4px;
+            font-size: 8pt;
+        }
+
+        .patient-info .label {
+            font-weight: bold;
+            width: 20%;
+        }
+
+        h2 {
+            color: #0066cc;
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 8px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #0066cc;
+            padding-bottom: 3px;
+        }
+
+        .medication-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+            font-size: 8pt;
+        }
+
+        .medication-table th {
+            background-color: #0066cc;
+            color: white;
+            padding: 4px;
+            text-align: center;
+            border: 1px solid #004080;
+            font-weight: bold;
+        }
+
+        .medication-table td {
+            border: 1px solid #ccc;
+            padding: 3px;
+            text-align: center;
+            min-height: 25px;
+        }
+
+        .medication-table td:first-child {
+            text-align: left;
+            font-weight: bold;
+            width: 30%;
+        }
+
+        .medication-table td.editable {
+            background-color: #fff;
+        }
+
+        .medication-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .instructions {
+            margin-top: 6px;
+            padding: 6px;
+            background-color: #fff9e6;
+            border-left: 3px solid #ffc107;
+            border-radius: 2px;
+        }
+
+        .instructions h3 {
+            color: #856404;
+            font-size: 9pt;
+            margin-bottom: 4px;
+        }
+
+        .instructions textarea {
+            font-size: 8pt;
+            padding: 4px;
+        }
+
+        .instructions ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+
+        .instructions li {
+            margin-bottom: 2px;
+        }
+
+        .signature-section {
+            margin-top: 15px;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+
+        .signature-section img {
+            max-width: 180px;
+            margin-bottom: 5px;
+        }
+
+        .signature-section p {
+            margin: 2px 0;
+            font-size: 8pt;
+        }
+
+        .footer-note {
+            margin-top: 10px;
+            padding: 5px;
+            background-color: #e7f3ff;
+            border-radius: 2px;
+            font-size: 7pt;
+            text-align: center;
+            color: #004085;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+
+        .btn-group {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        input[type="text"], input[type="date"], textarea {
+            width: 100%;
+            border: 1px solid #ccc;
+            padding: 2px 4px;
+            font-size: 8pt;
+        }
+
+        input[type="text"][readonly] {
+            background-color: #f0f0f0;
+            color: #333;
+            cursor: not-allowed;
+        }
+
+        textarea {
+            min-height: 40px;
+            resize: vertical;
+            line-height: 1.3;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="no-print btn-group">
+        <button class="btn btn-primary" onclick="window.print()">
+            <i class="fas fa-print"></i> Imprimir
+        </button>
+        <button class="btn btn-success" onclick="guardarIndicaciones()">
+            <i class="fas fa-save"></i> Guardar
+        </button>
+        <button class="btn btn-info" onclick="cargarIndicaciones()">
+            <i class="fas fa-folder-open"></i> Cargar
+        </button>
+        <button class="btn btn-warning" onclick="limpiarFormulario()">
+            <i class="fas fa-eraser"></i> Limpiar
+        </button>
+        <button class="btn btn-secondary" onclick="window.open('hcpe.html', '_blank')">
+            <i class="fas fa-arrow-left"></i> Volver a HCPE
+        </button>
+    </div>
+
+    <div class="header">
+        <h1>INDICACIONES MÉDICAS</h1>
+        <p><strong>Dr. Mauricio Villamandos - Médico Especialista en Psiquiatría</strong></p>
+        <p>M.N.: 134131 - Resistencia, Chaco – Argentina</p>
+        <p>infopsicodinamyc@gmail.com | Teléfono: 3765 041832</p>
+    </div>
+
+    <div class="patient-info">
+        <table>
+            <tr>
+                <td class="label">Paciente:</td>
+                <td colspan="3">
+                    <input type="text" id="apellidoPaciente" placeholder="Apellido" style="width: 32%; display: inline-block; margin-right: 1%;">
+                    <input type="text" id="nombrePaciente" placeholder="Nombre" style="width: 32%; display: inline-block; margin-right: 1%;">
+                    <input type="text" id="dniPaciente" placeholder="DNI" style="width: 20%; display: inline-block; margin-right: 1%;">
+                    <input type="text" id="edadPaciente" placeholder="Edad" style="width: 12%; display: inline-block;">
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Domicilio:</td>
+                <td><input type="text" id="domicilioPaciente" placeholder="Domicilio"></td>
+                <td class="label">Tel:</td>
+                <td><input type="text" id="telefonoPaciente" placeholder="Teléfono"></td>
+            </tr>
+            <tr>
+                <td class="label">Obra Social:</td>
+                <td><input type="text" id="obraSocialPaciente" placeholder="Obra Social"></td>
+                <td class="label">Nº Afiliado:</td>
+                <td><input type="text" id="numeroAfiliadoPaciente" placeholder="Número"></td>
+            </tr>
+            <tr style="background-color: #e7f3ff;">
+                <td class="label"><strong>Fecha:</strong></td>
+                <td><input type="date" id="fechaIndicacion"></td>
+                <td class="label"><strong>Próxima cita:</strong></td>
+                <td><input type="date" id="proximaCita"></td>
+            </tr>
+        </table>
+    </div>
+
+    <h2>ESQUEMA DE MEDICACIÓN</h2>
+    
+    <table class="medication-table">
+        <thead>
+            <tr>
+                <th>MEDICAMENTO Y DOSIS</th>
+                <th>MAÑANA</th>
+                <th>TARDE</th>
+                <th>NOCHE</th>
+                <th>REFUERZO<br>(si es necesario)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="editable"><input type="text" id="med1" placeholder="Ej: Sertralina 50mg"></td>
+                <td class="editable"><input type="text" id="med1_manana" placeholder=""></td>
+                <td class="editable"><input type="text" id="med1_tarde" placeholder=""></td>
+                <td class="editable"><input type="text" id="med1_noche" placeholder=""></td>
+                <td class="editable"><input type="text" id="med1_refuerzo" placeholder=""></td>
+            </tr>
+            <tr>
+                <td class="editable"><input type="text" id="med2" placeholder=""></td>
+                <td class="editable"><input type="text" id="med2_manana" placeholder=""></td>
+                <td class="editable"><input type="text" id="med2_tarde" placeholder=""></td>
+                <td class="editable"><input type="text" id="med2_noche" placeholder=""></td>
+                <td class="editable"><input type="text" id="med2_refuerzo" placeholder=""></td>
+            </tr>
+            <tr>
+                <td class="editable"><input type="text" id="med3" placeholder=""></td>
+                <td class="editable"><input type="text" id="med3_manana" placeholder=""></td>
+                <td class="editable"><input type="text" id="med3_tarde" placeholder=""></td>
+                <td class="editable"><input type="text" id="med3_noche" placeholder=""></td>
+                <td class="editable"><input type="text" id="med3_refuerzo" placeholder=""></td>
+            </tr>
+            <tr>
+                <td class="editable"><input type="text" id="med4" placeholder=""></td>
+                <td class="editable"><input type="text" id="med4_manana" placeholder=""></td>
+                <td class="editable"><input type="text" id="med4_tarde" placeholder=""></td>
+                <td class="editable"><input type="text" id="med4_noche" placeholder=""></td>
+                <td class="editable"><input type="text" id="med4_refuerzo" placeholder=""></td>
+            </tr>
+            <tr>
+                <td class="editable"><input type="text" id="med5" placeholder=""></td>
+                <td class="editable"><input type="text" id="med5_manana" placeholder=""></td>
+                <td class="editable"><input type="text" id="med5_tarde" placeholder=""></td>
+                <td class="editable"><input type="text" id="med5_noche" placeholder=""></td>
+                <td class="editable"><input type="text" id="med5_refuerzo" placeholder=""></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="instructions">
+        <h3><i class="fas fa-file-alt"></i> Observaciones</h3>
+        <textarea id="observacionesIndicaciones" rows="2" placeholder="Observaciones adicionales sobre el paciente o el tratamiento" oninput="autoExpand(this)"></textarea>
+    </div>
+
+    <div class="instructions">
+        <h3><i class="fas fa-info-circle"></i> Indicaciones Generales</h3>
+        <textarea id="indicacionesGenerales" rows="4" placeholder="Escriba aquí las indicaciones generales para el paciente" oninput="autoExpand(this)">• Tomar la medicación siempre a la misma hora cada día.
+• No suspender ni modificar las dosis sin consultar previamente.
+• Evitar el consumo de alcohol durante el tratamiento.
+• Si olvida una dosis, NO duplicar la siguiente.
+• Ante cualquier duda o efecto no deseado, comunicarse inmediatamente.
+• En caso de ser necesario, la medicación debe ser supervisada por un tercero responsable.</textarea>
+    </div>
+
+    <div class="footer-note">
+        <strong>IMPORTANTE:</strong> Esta prescripción es personal e intransferible. Conserve este documento para seguimiento médico.
+        Ante cualquier consulta o emergencia, comunicarse al teléfono indicado.
+    </div>
+
+    <div class="signature-section">
+        <img src="images/firma_digital.png" alt="Firma Digital">
+        <p><strong>Dr. Mauricio Villamandos</strong></p>
+        <p>Médico Especialista en Psiquiatría</p>
+        <p>M.N.: 134131</p>
+        <p>Resistencia, Chaco - Argentina</p>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Función para expandir automáticamente las textareas
+        function autoExpand(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        // Expandir textareas al cargar la página
+        window.addEventListener('load', function() {
+            document.querySelectorAll('textarea').forEach(function(textarea) {
+                autoExpand(textarea);
+            });
+        });
+    </script>
+    
+    <script>
+        // Establecer fecha actual por defecto y cargar paciente si viene DNI en URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fechaIndicacion').value = hoy;
+            
+            // Verificar si viene DNI por URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const dniURL = urlParams.get('dni');
+            
+            if (dniURL) {
+                document.getElementById('dniPaciente').value = dniURL;
+                buscarPacientePorDNI();
+            }
+        });
+
+        // Función para buscar paciente por DNI y cargar sus datos
+        function buscarPacientePorDNI() {
+            const dni = document.getElementById('dniPaciente').value.trim();
+            
+            if (!dni) {
+                alert('⚠️ Debe ingresar un DNI');
+                return;
+            }
+
+            // Buscar la historia clínica del paciente (intentar ambas claves)
+            let datosHC = localStorage.getItem(`hcpe_${dni}`) || localStorage.getItem(`hc_${dni}`);
+
+            if (!datosHC) {
+                alert('❌ No se encontró Historia Clínica para el DNI: ' + dni);
+                return;
+            }
+
+            try {
+                const datos = JSON.parse(datosHC);
+                
+                // Acceder a los campos correctamente (estructura con .campos)
+                const campos = datos.campos || datos;
+                
+                // Cargar datos esenciales del paciente
+                document.getElementById('apellidoPaciente').value = campos.apellido || '';
+                document.getElementById('nombrePaciente').value = campos.nombre || '';
+                document.getElementById('edadPaciente').value = campos.edad || '';
+                document.getElementById('domicilioPaciente').value = campos.domicilio || '';
+                document.getElementById('telefonoPaciente').value = campos.telefono || '';
+                document.getElementById('obraSocialPaciente').value = campos.obraSocial || '';
+                document.getElementById('numeroAfiliadoPaciente').value = campos.numeroAfiliado || '';
+                
+                // Silencioso si viene de URL, con alerta si es búsqueda manual
+                const urlParams = new URLSearchParams(window.location.search);
+                if (!urlParams.get('dni')) {
+                    const apellido = campos.apellido || '';
+                    const nombre = campos.nombre || '';
+                    alert('✓ Datos del paciente cargados correctamente\n\nPaciente: ' + apellido + ', ' + nombre);
+                }
+                      
+            } catch (error) {
+                console.error('Error al cargar datos:', error);
+                alert('❌ Error al cargar los datos del paciente');
+            }
+        }
+
+        // Función para guardar las indicaciones en localStorage
+        function guardarIndicaciones() {
+            const dni = document.getElementById('dniPaciente').value.trim();
+            
+            if (!dni) {
+                alert('⚠️ Debe ingresar el DNI del paciente');
+                return;
+            }
+
+            const datos = {
+                timestamp: new Date().toISOString(),
+                // Datos esenciales del paciente
+                apellidoPaciente: document.getElementById('apellidoPaciente').value,
+                nombrePaciente: document.getElementById('nombrePaciente').value,
+                dniPaciente: dni,
+                edadPaciente: document.getElementById('edadPaciente').value,
+                domicilioPaciente: document.getElementById('domicilioPaciente').value,
+                telefonoPaciente: document.getElementById('telefonoPaciente').value,
+                obraSocialPaciente: document.getElementById('obraSocialPaciente').value,
+                numeroAfiliadoPaciente: document.getElementById('numeroAfiliadoPaciente').value,
+                // Datos de la indicación
+                fechaIndicacion: document.getElementById('fechaIndicacion').value,
+                proximaCita: document.getElementById('proximaCita').value,
+                medicamentos: [],
+                observacionesIndicaciones: document.getElementById('observacionesIndicaciones').value,
+                indicacionesGenerales: document.getElementById('indicacionesGenerales').value
+            };
+
+            // Recoger medicamentos
+            for (let i = 1; i <= 5; i++) {
+                const med = document.getElementById(`med${i}`).value;
+                if (med.trim()) {
+                    datos.medicamentos.push({
+                        nombre: med,
+                        manana: document.getElementById(`med${i}_manana`).value,
+                        tarde: document.getElementById(`med${i}_tarde`).value,
+                        noche: document.getElementById(`med${i}_noche`).value,
+                        refuerzo: document.getElementById(`med${i}_refuerzo`).value
+                    });
+                }
+            }
+
+            const clave = `indicaciones_${dni}_${Date.now()}`;
+            localStorage.setItem(clave, JSON.stringify(datos));
+            
+            const nombreCompleto = `${datos.apellidoPaciente}, ${datos.nombrePaciente}`.trim();
+            alert(`✓ Indicaciones guardadas exitosamente\n\nPaciente: ${nombreCompleto || datos.nombrePaciente}\nDNI: ${dni}`);
+        }
+
+        // Función para cargar indicaciones
+        function cargarIndicaciones() {
+            const dni = prompt('Ingrese el DNI del paciente:');
+            
+            if (!dni) return;
+
+            // Buscar todas las indicaciones del paciente
+            const claves = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith(`indicaciones_${dni}_`)) {
+                    claves.push(key);
+                }
+            }
+
+            if (claves.length === 0) {
+                alert('No se encontraron indicaciones para este DNI');
+                return;
+            }
+
+            // Ordenar por timestamp (más reciente primero)
+            claves.sort().reverse();
+            
+            // Cargar la más reciente
+            const datos = JSON.parse(localStorage.getItem(claves[0]));
+            
+            // Cargar datos esenciales del paciente
+            document.getElementById('apellidoPaciente').value = datos.apellidoPaciente || '';
+            document.getElementById('nombrePaciente').value = datos.nombrePaciente || '';
+            document.getElementById('dniPaciente').value = datos.dniPaciente || '';
+            document.getElementById('edadPaciente').value = datos.edadPaciente || '';
+            document.getElementById('domicilioPaciente').value = datos.domicilioPaciente || '';
+            document.getElementById('telefonoPaciente').value = datos.telefonoPaciente || '';
+            document.getElementById('obraSocialPaciente').value = datos.obraSocialPaciente || '';
+            document.getElementById('numeroAfiliadoPaciente').value = datos.numeroAfiliadoPaciente || '';
+            document.getElementById('fechaIndicacion').value = datos.fechaIndicacion || '';
+            document.getElementById('proximaCita').value = datos.proximaCita || '';
+            document.getElementById('observacionesIndicaciones').value = datos.observacionesIndicaciones || '';
+            document.getElementById('indicacionesGenerales').value = datos.indicacionesGenerales || '';
+
+            // Cargar medicamentos
+            datos.medicamentos.forEach((med, index) => {
+                const i = index + 1;
+                if (i <= 5) {
+                    document.getElementById(`med${i}`).value = med.nombre || '';
+                    document.getElementById(`med${i}_manana`).value = med.manana || '';
+                    document.getElementById(`med${i}_tarde`).value = med.tarde || '';
+                    document.getElementById(`med${i}_noche`).value = med.noche || '';
+                    document.getElementById(`med${i}_refuerzo`).value = med.refuerzo || '';
+                }
+            });
+
+            alert('✓ Indicaciones cargadas exitosamente');
+        }
+
+        // Función para limpiar el formulario
+        function limpiarFormulario() {
+            if (!confirm('¿Está seguro de limpiar el formulario?')) return;
+
+            // Limpiar campos del paciente
+            document.getElementById('apellidoPaciente').value = '';
+            document.getElementById('nombrePaciente').value = '';
+            document.getElementById('dniPaciente').value = '';
+            document.getElementById('edadPaciente').value = '';
+            document.getElementById('domicilioPaciente').value = '';
+            document.getElementById('telefonoPaciente').value = '';
+            document.getElementById('obraSocialPaciente').value = '';
+            document.getElementById('numeroAfiliadoPaciente').value = '';
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fechaIndicacion').value = hoy;
+            document.getElementById('proximaCita').value = '';
+            
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`med${i}`).value = '';
+                document.getElementById(`med${i}_manana`).value = '';
+                document.getElementById(`med${i}_tarde`).value = '';
+                document.getElementById(`med${i}_noche`).value = '';
+                document.getElementById(`med${i}_refuerzo`).value = '';
+            }
+
+            document.getElementById('observacionesIndicaciones').value = '';
+            document.getElementById('indicacionesGenerales').value = `• Tomar la medicación siempre a la misma hora cada día.
+• No suspender ni modificar las dosis sin consultar previamente.
+• Evitar el consumo de alcohol durante el tratamiento.
+• Si olvida una dosis, NO duplicar la siguiente.
+• Ante cualquier duda o efecto no deseado, comunicarse inmediatamente.
+• En caso de ser necesario, la medicación debe ser supervisada por un tercero responsable.`;
+        }
+    </script>
+</body>
+</html>
